@@ -1,4 +1,4 @@
-# Aplikasi Pendaftaran Magang Kejaksaan Negeri
+# Aplikasi Pendaftaran Magang Kejaksaan Negeri Kabupaten Tegal
 
 Sistem pendaftaran magang online untuk jalur Mandiri dan Institusi, dilengkapi dengan dashboard admin untuk pengelolaan data.
 
