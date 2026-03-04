@@ -46,6 +46,15 @@ Jalankan perintah berikut untuk membuat tabel database dan akun Admin default:
 php artisan migrate
 php artisan db:seed --class=AdminSeeder
 ```
+#### Opsi Alternatif: 
+Import Database (SQL) 
+    - Jika Anda ingin menggunakan database yang sudah disiapkan (termasuk data dummy), Anda dapat mengimpor file SQL yang tersedia di folder sql/:
+        1. Pastikan database register_magang sudah dibuat di MySQL/MariaDB. 
+        2. Import file sql/register_magang.sql menggunakan tool database favorit Anda atau via terminal: ```bash
+        mysql -u root -p register_magang < sql/register_magang.sql
+        ```
+        Catatan: Jika menggunakan cara ini, Anda tidak perlu menjalankan perintah migrate dan db:seed.
+
 
 ### 4. Setup Storage
 Agar file upload (PDF/Foto) dapat diakses publik, buat symbolic link:
