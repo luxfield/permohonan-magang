@@ -8,6 +8,9 @@ use App\Http\Controllers\MagangStatusController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
+    if (auth()->check()) {
+        return redirect()->route('admin.dashboard');
+    }
     return view('home');
 })->name('home');
 
@@ -35,3 +38,5 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::put('/{id}/status', [AdminController::class, 'updateStatus'])->name('update_status');
     Route::delete('/{id}', [AdminController::class, 'destroy'])->name('destroy');
 });
+
+Route::get('/status/{id}/upload', [MagangStatusController::class, 'uploadForm'])->name('status.upload.form');

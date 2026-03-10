@@ -50,7 +50,8 @@
               <th class="px-4 py-3">Nama & Kontak</th>
               <th class="px-4 py-3">Jalur & Institusi</th>
               <th class="px-4 py-3">Bidang & Waktu</th>
-              <th class="px-4 py-3">Berkas</th>
+              <th class="px-4 py-3">Berkas Pengajuan</th>
+              <th class="px-4 py-3">Berkas Makalah</th>
               <th class="px-4 py-3 text-right">Aksi</th>
             </tr>
           </thead>
@@ -98,6 +99,23 @@
                             'CV' => $app->cv_path,
                             'Foto' => $app->foto_path,
                             'KTP/Transkrip' => $app->status_pengajuan == 'mandiri' ? $app->ktp_path : $app->transkrip_path,
+                            ];
+                    @endphp
+                    @foreach($files as $label => $path)
+                        @if($path)
+                            <a href="{{ asset('storage/'.$path) }}" target="_blank" class="text-emerald-600 hover:underline hover:text-emerald-800 flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                {{ $label }}
+                            </a>
+                        @endif
+                    @endforeach
+                  </div>
+                </td>
+                <td class="px-4 py-3">
+                  <div class="flex flex-col gap-1 text-xs">
+                    @php
+                        $files = [
+                            'Laporan' => $app->laporan_akhir_path,
                         ];
                     @endphp
                     @foreach($files as $label => $path)

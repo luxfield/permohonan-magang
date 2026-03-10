@@ -11,14 +11,17 @@ return new class extends Migration
         Schema::create('magang_applications', function (Blueprint $table) {
             $table->id();
             $table->string('status_pengajuan');
+            $table->enum('status', ['pending', 'diterima', 'ditolak'])->default('pending');
+            $table->text('catatan_admin')->nullable();
             $table->string('nama');
+            $table->date('tgl_lahir')->nullable();
             $table->string('no_hp');
             $table->string('email');
-            $table->string('nik')->nullable();
+            $table->string('nik', 255)->nullable();
             $table->text('alamat');
             $table->date('tgl_mulai');
             $table->date('tgl_selesai');
-            $table->json('bidang');
+            $table->json('bidang')->nullable();
             $table->text('tujuan');
 
             // Mandiri fields
@@ -36,13 +39,12 @@ return new class extends Migration
 
             // File paths
             $table->string('surat_permohonan_path')->nullable();
-            $table->string('cv_path')->nullable();
             $table->string('ktp_path')->nullable();
             $table->string('foto_path')->nullable();
-            $table->string('lampiran_lain_path')->nullable();
             $table->string('surat_pengantar_path')->nullable();
             $table->string('transkrip_path')->nullable();
             $table->string('proposal_path')->nullable();
+            $table->string('laporan_akhir_path')->nullable();
 
             $table->timestamps();
         });

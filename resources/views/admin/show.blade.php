@@ -7,7 +7,6 @@
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-900 font-sans pb-10">
-
   <!-- Navbar -->
   <nav class="bg-emerald-900 text-white shadow-md sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -66,7 +65,6 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
         <!-- Left Column: Info -->
         <div class="lg:col-span-1 space-y-6">
             <!-- Card: Data Pribadi -->
