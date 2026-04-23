@@ -47,6 +47,8 @@ class SampleRegisterController extends Controller
                 'kontakPembimbing' => 'required|string',
                 'jumlahPeserta' => 'required|integer',
                 'suratPengantar' => 'required|file|mimes:pdf|max:10240',
+                'captcha' => 'required|captcha',
+                'captcha.captcha' => 'Kode verifikasi keamanan yang Anda masukkan salah. Silakan coba lagi.'
             ]);
         }
 

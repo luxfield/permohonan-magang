@@ -262,13 +262,31 @@
 
           <!-- Statement + Actions -->
           <div class="pt-4 border-t border-dashed border-slate-200">
-            <h3 class="text-sm font-bold">5) Pernyataan</h3>
+            <h3 class="text-sm font-bold">5) Pernyataan & Keamanan</h3>
             <label class="mt-2 flex items-start gap-3 rounded-2xl border border-slate-200 bg-white p-3">
               <input id="pernyataan" name="pernyataan" type="checkbox" required class="mt-1 accent-emerald-700" />
               <span class="text-xs text-slate-700">
                 Saya menyatakan data yang diisikan benar dan bersedia mematuhi tata tertib di lingkungan Kejaksaan Negeri Kabupaten Tegal.
               </span>
             </label>
+
+            <!-- Captcha Section -->
+            <div class="mt-4 p-4 bg-white border border-slate-200 rounded-2xl max-w-sm">
+              <label for="captcha" class="text-xs font-bold block mb-2">
+                Verifikasi Keamanan <span class="text-rose-700">*</span>
+              </label>
+              <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-3">
+                <div class="overflow-hidden rounded-xl border border-slate-200 bg-slate-50 flex-shrink-0 [&>img]:max-w-full [&>img]:h-auto" id="captcha-container">
+                  {!! captcha_img('flat') !!}
+                </div>
+                <button type="button" id="btnRefreshCaptcha" class="p-2 text-slate-500 hover:text-emerald-700 hover:bg-emerald-50 rounded-xl transition self-start sm:self-center border border-transparent hover:border-emerald-200" title="Muat ulang Captcha">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                </button>
+              </div>
+              <input type="text" id="captcha" name="captcha" required placeholder="Masukkan karakter di atas"
+                     class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-200 focus:border-emerald-500" />
+              <p class="text-[11px] text-slate-500 mt-2">Ketik karakter yang muncul pada gambar untuk membuktikan Anda bukan robot.</p>
+            </div>
 
             <div class="mt-3 flex flex-wrap gap-2">
               <button id="btnSubmit" class="btn bg-emerald-700 text-white font-extrabold px-6 py-2 rounded-xl hover:bg-emerald-800 transition disabled:opacity-50 disabled:cursor-not-allowed" type="submit" disabled>Kirim Pengajuan</button>
@@ -621,6 +639,14 @@
     document.querySelectorAll('input[type="file"]').forEach(el => {
       el.addEventListener("change", () => validateFile(el));
     });
+
+    // ===== Captcha Refresh =====
+    if ($("btnRefreshCaptcha")) {
+      $("btnRefreshCaptcha").addEventListener("click", function() {
+        const img = document.querySelector("#captcha-container img");
+        if (img) img.src = img.src.split('?')[0] + '?' + Math.random();
+      });
+    }
 
     form.addEventListener("submit", (e) => {
       if (!form.checkValidity()) {
