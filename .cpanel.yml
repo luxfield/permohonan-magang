@@ -1,3 +1,4 @@
+---
 deployment:
   tasks:
     - export APPPATH=/home/knkabtegal/magang-app
