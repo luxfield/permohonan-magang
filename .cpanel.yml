@@ -1,0 +1,4 @@
+deployment:
+  tasks:
+    - export APPPATH=/home/knkabtegal/magang-app
+    - export PUBLICPATH=/home/knkabtegal/public_html/magang
