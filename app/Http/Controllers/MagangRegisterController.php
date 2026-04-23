@@ -15,13 +15,13 @@ class MagangRegisterController extends Controller
     {
         // 1. Aturan Validasi Dasar (Berlaku untuk semua)
         $rules = [
-            'statusPengajuan' => 'required|in:mandiri,institusi',
-            'nama'            => 'required|string|max:255',
-            'kontakHp'        => 'required|string|max:20',
-            'email'           => 'required|email|max:255',
-            'nik'             => 'required|numeric',
-            'tglLahir'        => 'required|date|before_or_equal:-17 years',
-            'alamat'          => 'required|string',
+            'statusPengajuan' => 'required|in:mandiri,institusi,kejuruan',
+            'nama'            => 'required_if:statusPengajuan,mandiri|nullable|string|max:255',
+            'kontakHp'        => 'required_if:statusPengajuan,mandiri|nullable|string|max:20',
+            'email'           => 'required_if:statusPengajuan,mandiri|nullable|email|max:255',
+            'nik'             => 'required_if:statusPengajuan,mandiri|nullable|numeric',
+            'tglLahir'        => 'required_if:statusPengajuan,mandiri|nullable|date|before_or_equal:-17 years',
+            'alamat'          => 'required_if:statusPengajuan,mandiri|nullable|string',
             'tglMulai'        => 'required|date|after_or_equal:today',
             'tglSelesai'      => [
                 'required',
@@ -48,10 +48,9 @@ class MagangRegisterController extends Controller
                 'ktpMandiri'       => 'required|file|mimes:jpg,jpeg,png,pdf|max:10240',
                 'fotoMandiri'      => 'required|file|mimes:jpg,jpeg,png|max:10240',
             ]);
-        } elseif ($request->statusPengajuan === 'institusi') {
+        } elseif ($request->statusPengajuan === 'institusi' || $request->statusPengajuan === 'kejuruan') {
             $rules = array_merge($rules, [
                 'institusi'        => 'required|string|max:255',
-                'nim'              => 'required|string|max:255',
                 'fakultas'         => 'required|string|max:255',
                 'semester'         => 'required|string|max:50',
                 'pembimbing'       => 'required|string|max:255',
@@ -60,8 +59,6 @@ class MagangRegisterController extends Controller
                 
                 // Validasi File Institusi (Max 10MB = 10240 KB)
                 'suratPengantar'   => 'required|file|mimes:pdf|max:10240',
-                'transkrip'        => 'required|file|mimes:pdf|max:10240',
-                'fotoInstitusi'    => 'required|file|mimes:jpg,jpeg,png|max:10240',
                 'proposal'         => 'nullable|file|mimes:pdf|max:10240',
             ]);
         }
@@ -72,12 +69,12 @@ class MagangRegisterController extends Controller
         // 4. Proses Upload File & Mapping Data
         $data = [
             'status_pengajuan' => $request->statusPengajuan,
-            'nama'             => $request->nama,
-            'no_hp'            => $request->kontakHp,
-            'email'            => $request->email,
-            'nik'              => $request->nik,
-            'tgl_lahir'        => $request->tglLahir, // Simpan ke database
-            'alamat'           => $request->alamat,
+            'nama'             => $request->nama ?? '-',
+            'no_hp'            => $request->kontakHp ?? '-',
+            'email'            => $request->email ?? '-',
+            'nik'              => $request->nik ?? '-',
+            'tgl_lahir'        => $request->tglLahir ?? now()->format('Y-m-d'), // Simpan ke database
+            'alamat'           => $request->alamat ?? '-',
             'tgl_mulai'        => $request->tglMulai,
             'tgl_selesai'      => $request->tglSelesai,
             'tujuan'           => $request->tujuan,
@@ -92,9 +89,9 @@ class MagangRegisterController extends Controller
             if($request->hasFile('ktpMandiri')) $data['ktp_path'] = $request->file('ktpMandiri')->store('uploads/ktp', 'public');
             if($request->hasFile('fotoMandiri')) $data['foto_path'] = $request->file('fotoMandiri')->store('uploads/foto', 'public');
 
-        } elseif ($request->statusPengajuan === 'institusi') {
+        } elseif ($request->statusPengajuan === 'institusi' || $request->statusPengajuan === 'kejuruan') {
             $data['institusi'] = $request->institusi;
-            $data['nim'] = $request->nim;
+            $data['nim'] = $request->nim ?? '-';
             $data['fakultas'] = $request->fakultas;
             $data['semester'] = $request->semester;
             $data['pembimbing'] = $request->pembimbing;
@@ -103,14 +100,12 @@ class MagangRegisterController extends Controller
 
             // Upload Files Institusi
             if($request->hasFile('suratPengantar')) $data['surat_pengantar_path'] = $request->file('suratPengantar')->store('uploads/surat', 'public');
-            if($request->hasFile('transkrip')) $data['transkrip_path'] = $request->file('transkrip')->store('uploads/transkrip', 'public');
-            if($request->hasFile('fotoInstitusi')) $data['foto_path'] = $request->file('fotoInstitusi')->store('uploads/foto', 'public');
             if($request->hasFile('proposal')) $data['proposal_path'] = $request->file('proposal')->store('uploads/proposal', 'public');
         }
 
         MagangApplication::create($data);
 
         // 5. Redirect Kembali dengan Pesan Sukses
-        return back()->with('success', 'Pengajuan berhasil dikirim dan telah divalidasi sistem.');
+        return back()->with('success', 'Pengajuan berhasil dikirim');
     }
 }

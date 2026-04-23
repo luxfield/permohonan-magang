@@ -13,10 +13,17 @@
   <header class="bg-gradient-to-r from-emerald-900 to-emerald-700 text-white border-b-4 border-white/10">
     <div class="max-w-6xl mx-auto px-4 py-5">
       <div class="flex flex-wrap items-center gap-3">
+        <div class="flex items-center gap-3">
+          <a href="{{ route('home') }}" class="flex items-center gap-2 hover:text-emerald-200 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            <span class="font-bold">Kembali</span>
+          </a>
+        </div>
+        <div class="h-10 w-px bg-white/20"></div>
         <div class="h-11 w-11 rounded-xl bg-white/15 grid place-items-center font-extrabold">KN</div>
         <div>
           <h1 class="text-base sm:text-lg font-bold leading-tight">
-            Form Pengajuan Pemagangan — Kejaksaan Negeri
+            Form Pengajuan Pemagangan — Kejaksaan Negeri Kabupaten Tegal
           </h1>
           <p class="text-xs sm:text-sm text-white/90 mt-1">
             Silahkan isi data diri anda dengan benar.
@@ -70,7 +77,7 @@
                   <option value="">— Pilih —</option>
                   <option value="mandiri">Pemagangan Mandiri (Perorangan)</option>
                   <option value="institusi">Magang Bidang Hukum (Fakultas Hukum)</option>
-                  <option value="institusi">Magang Bidang Umum & Teknis (Mahasiswa/Siswa SMK/MAK):</option>
+                  <option value="kejuruan">Magang Bidang Umum & Teknis (Mahasiswa/Siswa SMK/MAK)</option>
                 </select>
                 <p class="text-[11px] text-slate-500 mt-1">Akan memunculkan persyaratan sesuai jalur.</p>
               </div>
@@ -79,7 +86,7 @@
           </div>
 
           <!-- Section 2 -->
-          <div class="pt-4 border-t border-dashed border-slate-200">
+          <div id="dataPemohonSection" class="pt-4 border-t border-dashed border-slate-200">
             <h3 class="text-sm font-bold">2) Data Pemohon</h3>
             <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
@@ -186,15 +193,10 @@
           <div id="institusiSection" class="hidden pt-4 border-t border-dashed border-slate-200">
             <h3 class="text-sm font-bold">4B) Jalur Institusi</h3>
 
-            <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="mt-3 grid grid-cols-1 gap-3">
               <div>
                 <label for="institusi" class="text-xs font-bold">Nama Institusi <span class="text-rose-700">*</span></label>
                 <input id="institusi" name="institusi"
-                       class="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-200 focus:border-emerald-500" />
-              </div>
-              <div>
-                <label for="nim" class="text-xs font-bold">NIM/NIS <span class="text-rose-700">*</span></label>
-                <input id="nim" name="nim"
                        class="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-200 focus:border-emerald-500" />
               </div>
             </div>
@@ -251,16 +253,6 @@
                        class="mt-1 w-full text-sm file:mr-3 file:rounded-xl file:border-0 file:bg-slate-900/5 file:px-3 file:py-2 file:font-bold file:text-slate-900" />
               </div>
               <div>
-                <label for="transkrip" class="text-xs font-bold">Transkrip/Raport (PDF)</label>
-                <input id="transkrip" name="transkrip" type="file" accept=".pdf"
-                       class="mt-1 w-full text-sm file:mr-3 file:rounded-xl file:border-0 file:bg-slate-900/5 file:px-3 file:py-2 file:font-bold file:text-slate-900" />
-              </div>
-              <div>
-                <label for="fotoInstitusi" class="text-xs font-bold">Pas Foto (JPG/PNG)</label>
-                <input id="fotoInstitusi" name="fotoInstitusi" type="file" accept=".jpg,.jpeg,.png"
-                       class="mt-1 w-full text-sm file:mr-3 file:rounded-xl file:border-0 file:bg-slate-900/5 file:px-3 file:py-2 file:font-bold file:text-slate-900" />
-              </div>
-              <div>
                 <label for="proposal" class="text-xs font-bold">Proposal (opsional)</label>
                 <input id="proposal" name="proposal" type="file" accept=".pdf"
                        class="mt-1 w-full text-sm file:mr-3 file:rounded-xl file:border-0 file:bg-slate-900/5 file:px-3 file:py-2 file:font-bold file:text-slate-900" />
@@ -274,7 +266,7 @@
             <label class="mt-2 flex items-start gap-3 rounded-2xl border border-slate-200 bg-white p-3">
               <input id="pernyataan" name="pernyataan" type="checkbox" required class="mt-1 accent-emerald-700" />
               <span class="text-xs text-slate-700">
-                Saya menyatakan data yang diisikan benar dan bersedia mematuhi tata tertib di lingkungan Kejaksaan Negeri.
+                Saya menyatakan data yang diisikan benar dan bersedia mematuhi tata tertib di lingkungan Kejaksaan Negeri Kabupaten Tegal.
               </span>
             </label>
 
@@ -304,19 +296,28 @@
 
     function toggleSections(){
       const v = statusPengajuan.value;
-      const requiredIds = ["institusi","nim","fakultas","semester","pembimbing","kontakPembimbing","jumlahPeserta"];
+      const requiredIds = ["institusi","fakultas","semester","pembimbing","kontakPembimbing","jumlahPeserta"];
+      const dataPemohonRequiredIds = ["nama", "kontakHp", "email", "nik", "tglLahir", "alamat"];
+      const dataPemohonSection = $("dataPemohonSection");
+
       if(v === "mandiri"){
         mandiriSection.classList.remove("hidden");
         institusiSection.classList.add("hidden");
+        if(dataPemohonSection) dataPemohonSection.classList.remove("hidden");
         requiredIds.forEach(id => $(id).required = false);
-      } else if(v === "institusi"){
+        dataPemohonRequiredIds.forEach(id => { if($(id)) $(id).required = true; });
+      } else if(v === "institusi" || v === "kejuruan"){
         institusiSection.classList.remove("hidden");
         mandiriSection.classList.add("hidden");
+        if(dataPemohonSection) dataPemohonSection.classList.add("hidden");
         requiredIds.forEach(id => $(id).required = true);
+        dataPemohonRequiredIds.forEach(id => { if($(id)) $(id).required = false; });
       } else {
         mandiriSection.classList.add("hidden");
         institusiSection.classList.add("hidden");
+        if(dataPemohonSection) dataPemohonSection.classList.remove("hidden");
         requiredIds.forEach(id => $(id).required = false);
+        dataPemohonRequiredIds.forEach(id => { if($(id)) $(id).required = true; });
       }
 
       if(btnSubmit) btnSubmit.disabled = !v;
@@ -394,10 +395,9 @@
             foto: fileMeta(fd.get("fotoMandiri")),
           }
         };
-      } else if(status === "institusi"){
+      } else if(status === "institusi" || status === "kejuruan"){
         payload.jalur = {
           institusi: (fd.get("institusi") || "").toString(),
-          nim: (fd.get("nim") || "").toString(),
           fakultas: (fd.get("fakultas") || "").toString(),
           semester: (fd.get("semester") || "").toString(),
           pembimbing: (fd.get("pembimbing") || "").toString(),
@@ -406,8 +406,6 @@
           files: {
             suratPengantar: fileMeta(fd.get("suratPengantar")),
             cv: fileMeta(fd.get("cvInstitusi")),
-            transkrip: fileMeta(fd.get("transkrip")),
-            foto: fileMeta(fd.get("fotoInstitusi")),
             proposal: fileMeta(fd.get("proposal")),
           }
         };
@@ -455,9 +453,11 @@
       listWrap.innerHTML = filtered.map(r => {
         const badge = r.status === "mandiri"
           ? `<span class="text-[11px] font-semibold rounded-full border border-emerald-200 bg-emerald-50 text-emerald-800 px-2.5 py-1">MANDIRI</span>`
+          : r.status === "kejuruan"
+          ? `<span class="text-[11px] font-semibold rounded-full border border-purple-200 bg-purple-50 text-purple-800 px-2.5 py-1">KEJURUAN</span>`
           : `<span class="text-[11px] font-semibold rounded-full border border-sky-200 bg-sky-50 text-sky-800 px-2.5 py-1">INSTITUSI</span>`;
 
-        const extra = r.status === "institusi"
+        const extra = (r.status === "institusi" || r.status === "kejuruan")
           ? `Institusi: ${r.jalur?.institusi || "-"}`
           : `Asal: ${r.jalur?.pendidikanAsal || "-"}`;
 
@@ -529,7 +529,7 @@
       const header = ["id","createdAt","status","nama","hp","email","nik","tglLahir","tglMulai","tglSelesai","institusi_or_asal"];
       const lines = [header.join(",")];
       for(const r of rows){
-        const instOrAsal = r.status === "institusi" ? (r.jalur?.institusi || "") : (r.jalur?.pendidikanAsal || "");
+        const instOrAsal = (r.status === "institusi" || r.status === "kejuruan") ? (r.jalur?.institusi || "") : (r.jalur?.pendidikanAsal || "");
         const values = [
           r.id, r.createdAt, r.status, r.nama||"", r.hp||"", r.email||"", r.nik||"", r.tglLahir||"",
           r.tglMulai||"", r.tglSelesai||"", instOrAsal

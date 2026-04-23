@@ -28,8 +28,12 @@
     <div class="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-8">
       <div>
         <div class="flex items-center gap-3 mb-2">
-          <h1 class="text-3xl font-bold text-slate-800">{{ $application->nama }}</h1>
           @if($application->status_pengajuan === 'mandiri')
+            <h1 class="text-3xl font-bold text-slate-800">{{ $application->nama }}</h1>
+          @else
+            <h1 class="text-3xl font-bold text-slate-800">{{ $application->institusi }}</h1>
+          @endif
+            @if($application->status_pengajuan === 'mandiri')
             <span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">MANDIRI</span>
           @else
             <span class="px-3 py-1 rounded-full text-xs font-bold bg-sky-100 text-sky-800 border border-sky-200">INSTITUSI</span>
@@ -67,10 +71,13 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Left Column: Info -->
         <div class="lg:col-span-1 space-y-6">
-            <!-- Card: Data Pribadi -->
+            <!-- Card: Data Pribadi / Institusi -->
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
-                <h3 class="font-bold text-slate-800 border-b border-slate-100 pb-3 mb-4">Data Pribadi</h3>
+                <h3 class="font-bold text-slate-800 border-b border-slate-100 pb-3 mb-4">
+                    {{ $application->status_pengajuan === 'mandiri' ? 'Data Pribadi' : 'Data Institusi' }}
+                </h3>
                 <dl class="space-y-3 text-sm">
+                    @if($application->status_pengajuan === 'mandiri')
                     <div>
                         <dt class="text-slate-500 text-xs">NIK</dt>
                         <dd class="font-mono font-medium">{{ $application->nik }}</dd>
@@ -83,6 +90,20 @@
                         <dt class="text-slate-500 text-xs">Alamat Domisili</dt>
                         <dd class="font-medium">{{ $application->alamat }}</dd>
                     </div>
+                    @else
+                        <div>
+                            <dt class="text-slate-500 text-xs">Nama Institusi</dt>
+                            <dd class="font-medium">{{ $application->institusi }}</dd>
+                        </div>
+                        <div>
+                            <dt class="text-slate-500 text-xs">Fakultas / Jurusan</dt>
+                            <dd class="font-medium">{{ $application->fakultas }}</dd>
+                        </div>
+                        <div>
+                            <dt class="text-slate-500 text-xs">Pembimbing</dt>
+                            <dd class="font-medium">{{ $application->pembimbing }} ({{ $application->kontak_pembimbing }})</dd>
+                        </div>
+                    @endif
                 </dl>
             </div>
 
@@ -109,7 +130,7 @@
             <!-- Card: Data Akademik -->
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
                 <h3 class="font-bold text-slate-800 border-b border-slate-100 pb-3 mb-4">
-                    {{ $application->status_pengajuan === 'mandiri' ? 'Data Asal Institusi' : 'Data Akademik' }}
+                    {{ $application->status_pengajuan === 'mandiri' ? 'Data Asal Institusi' : 'Detail Peserta' }}
                 </h3>
                 <dl class="space-y-3 text-sm">
                     @if($application->status_pengajuan === 'mandiri')
@@ -123,21 +144,19 @@
                         </div>
                     @else
                         <div>
-                            <dt class="text-slate-500 text-xs">Institusi</dt>
-                            <dd class="font-medium">{{ $application->institusi }}</dd>
-                        </div>
-                        <div>
-                            <dt class="text-slate-500 text-xs">NIM / Fakultas</dt>
-                            <dd class="font-medium">{{ $application->nim }} / {{ $application->fakultas }}</dd>
+                            <dt class="text-slate-500 text-xs">Jumlah Peserta</dt>
+                            <dd class="font-medium">{{ $application->jumlah_peserta ?: '-' }} Orang</dd>
                         </div>
                         <div>
                             <dt class="text-slate-500 text-xs">Semester</dt>
                             <dd class="font-medium">{{ $application->semester }}</dd>
                         </div>
+                        @if($application->nim !== '-')
                         <div>
-                            <dt class="text-slate-500 text-xs">Pembimbing</dt>
-                            <dd class="font-medium">{{ $application->pembimbing }} ({{ $application->kontak_pembimbing }})</dd>
+                            <dt class="text-slate-500 text-xs">NIM / NIS</dt>
+                            <dd class="font-medium">{{ $application->nim }}</dd>
                         </div>
+                        @endif
                     @endif
                 </dl>
             </div>
@@ -177,6 +196,127 @@
                     </div>
                 </form>
             </div>
+
+            {{-- Card: Manajemen Peserta (Hanya untuk Institusi & Diterima) --}}
+            @if($application->status_pengajuan !== 'mandiri' && $application->status === 'diterima')
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 mt-6">
+                <div class="border-b border-slate-100 pb-3 mb-4 flex justify-between items-center">
+                    <h3 class="font-bold text-slate-800">Manajemen Peserta Magang</h3>
+                    <span class="text-sm text-slate-500 font-medium">
+                        {{ $application->interns->count() }} / {{ $application->jumlah_peserta }} Peserta
+                    </span>
+                </div>
+
+                {{-- Daftar Peserta yang Sudah Didaftarkan --}}
+                @if($application->interns->isNotEmpty())
+                <div class="mb-6">
+                    <h4 class="text-sm font-bold text-slate-600 mb-3">Daftar Akun Peserta</h4>
+                    <ul class="space-y-3">
+                        @foreach($application->interns as $intern)
+                        <li class="flex flex-col p-3 bg-slate-50 rounded-lg border border-slate-200">
+                            <div class="flex justify-between items-center w-full">
+                                <div>
+                                    <p class="font-bold text-sm text-slate-800">{{ $intern->nama }}</p>
+                                     <p class="text-xs text-slate-500">{{ $intern->email }}
+                                        @if($intern->nim)
+                                        <span class="mx-1">•</span> NIM: {{ $intern->nim }}
+                                        @endif
+                                    <p class="text-xs text-slate-500">NIM / NIS: <span class="font-semibold">{{ $intern->nim }}</span>
+                                        <span class="mx-1">•</span> Tgl Lahir: {{ \Carbon\Carbon::parse($intern->tanggal_lahir)->format('d M Y') }}
+                                    </p>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button type="button" onclick="toggleEdit('edit-intern-{{ $intern->id }}')" class="text-xs font-bold text-amber-600 hover:text-amber-800 hover:bg-amber-100 bg-amber-50 px-2 py-1 rounded transition">Edit</button>
+                                    <form action="{{ route('admin.interns.destroy', $intern->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus peserta ini? Akun login juga akan dihapus secara permanen.');" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-xs font-bold text-rose-600 hover:text-rose-800 hover:bg-rose-100 bg-rose-50 px-2 py-1 rounded transition">Hapus</button>
+                                    </form>
+                                </div>
+                            </div>
+                            
+                            <!-- Form Edit (Tersembunyi by default) -->
+                            <div id="edit-intern-{{ $intern->id }}" class="hidden mt-3 pt-3 border-t border-slate-200">
+                                <form action="{{ route('admin.interns.update', $intern->id) }}" method="POST" class="space-y-3">
+                                    @csrf
+                                    @method('PUT')
+                                    <div>
+                                        <label class="block text-xs font-medium text-slate-600 mb-1">Nama Lengkap</label>
+                                        <input type="text" name="nama" value="{{ $intern->nama }}" required class="w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-medium text-slate-600 mb-1">Email</label>
+                                        <input type="email" name="email" value="{{ $intern->email }}" required class="w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
+                                        <label class="block text-xs font-medium text-slate-600 mb-1">NIM / NIS / NIK</label>
+                                        <input type="text" name="nim" value="{{ $intern->nim }}" required class="w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-medium text-slate-600 mb-1">NIM / NIS</label>
+                                        <input type="text" name="nim" value="{{ $intern->nim }}" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
+                                        <label class="block text-xs font-medium text-slate-600 mb-1">Tanggal Lahir</label>
+                                        <input type="date" name="tanggal_lahir" value="{{ $intern->tanggal_lahir }}" required class="w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
+                                    </div>
+                                    <div class="flex justify-end gap-2">
+                                        <button type="button" onclick="toggleEdit('edit-intern-{{ $intern->id }}')" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-bold transition">Batal</button>
+                                        <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition">Simpan Perubahan</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
+
+                {{-- Form Tambah Peserta (jika kuota masih ada) --}}
+                @if($application->interns->count() < $application->jumlah_peserta)
+                <div>
+                    <h4 class="text-sm font-bold text-slate-600 mb-3">Buat Akun Peserta Baru</h4>
+                    <form action="{{ route('admin.interns.add', $application->id) }}" method="POST" class="space-y-4">
+                        @csrf
+                        <div>
+                            <label for="nama" class="block text-xs font-medium text-slate-600 mb-1">Nama Lengkap Peserta</label>
+                            <input type="text" name="nama" id="nama" required class="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm" placeholder="Contoh: Budi Santoso">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-xs font-medium text-slate-600 mb-1">Email Peserta</label>
+                            <input type="email" name="email" id="email" required class="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm" placeholder="Email aktif untuk login">
+                            <label for="nim" class="block text-xs font-medium text-slate-600 mb-1">NIM / NIS / NIK</label>
+                            <input type="text" name="nim" id="nim" required class="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm" placeholder="Nomor Induk Mahasiswa/Siswa/Kependudukan">
+                        </div>
+                        <div>
+                            <label for="nim" class="block text-xs font-medium text-slate-600 mb-1">NIM / NIS (Opsional)</label>
+                            <input type="text" name="nim" id="nim" class="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm" placeholder="Nomor Induk Mahasiswa/Siswa">
+                            <label for="tanggal_lahir" class="block text-xs font-medium text-slate-600 mb-1">Tanggal Lahir</label>
+                            <input type="date" name="tanggal_lahir" id="tanggal_lahir" required class="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm">
+                        </div>
+                        <div class="flex justify-end">
+                            <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-bold text-sm transition shadow-sm flex justify-center items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+                                Buat Akun & Tambah Peserta
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                @else
+                <div class="w-full py-3 text-center text-sm text-slate-500 bg-slate-100 rounded-lg border border-slate-200">
+                    Kuota peserta untuk pengajuan ini sudah penuh.
+                </div>
+                @endif
+
+                {{-- Display success/error messages from session --}}
+                @if(session('success') && Str::contains(session('success'), 'Akun untuk'))
+                    <div class="mt-4 bg-emerald-100 border border-emerald-300 text-emerald-800 px-4 py-3 rounded-lg text-sm">
+                        {{ session('success') }}
+                    </div>
+                @endif
+                @if(session('error'))
+                    <div class="mt-4 bg-rose-100 border border-rose-300 text-rose-800 px-4 py-3 rounded-lg text-sm">
+                        {{ session('error') }}
+                    </div>
+                @endif
+            </div>
+            @endif
 
             <h3 class="font-bold text-xl text-slate-800">Berkas Lampiran</h3>
             
@@ -247,5 +387,16 @@
 
   </main>
 
+  <!-- Script untuk toggle form edit -->
+  <script>
+    function toggleEdit(id) {
+        const el = document.getElementById(id);
+        if (el.classList.contains('hidden')) {
+            el.classList.remove('hidden');
+        } else {
+            el.classList.add('hidden');
+        }
+    }
+  </script>
 </body>
 </html>

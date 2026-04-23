@@ -50,4 +50,9 @@ class MagangApplication extends Model
         'tgl_mulai' => 'date',
         'tgl_selesai' => 'date',
     ];
+
+    public function interns()
+    {
+        return $this->hasMany(Intern::class);
+    }
 }

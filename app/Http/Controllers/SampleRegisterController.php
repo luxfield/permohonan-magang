@@ -17,13 +17,13 @@ class SampleRegisterController extends Controller
     {
         // Validasi Dasar
         $rules = [
-            'statusPengajuan' => 'required|in:mandiri,institusi',
-            'nama' => 'required|string|max:255',
-            'kontakHp' => 'required|string|max:20',
-            'email' => 'required|email|max:255',
-            'nik' => 'required|string|min:16',
-            'tglLahir' => 'required|date|before_or_equal:-17 years',
-            'alamat' => 'required|string',
+            'statusPengajuan' => 'required|in:mandiri,institusi,kejuruan',
+            'nama' => 'required_if:statusPengajuan,mandiri|nullable|string|max:255',
+            'kontakHp' => 'required_if:statusPengajuan,mandiri|nullable|string|max:20',
+            'email' => 'required_if:statusPengajuan,mandiri|nullable|email|max:255',
+            'nik' => 'required_if:statusPengajuan,mandiri|nullable|string|min:16',
+            'tglLahir' => 'required_if:statusPengajuan,mandiri|nullable|date|before_or_equal:-17 years',
+            'alamat' => 'required_if:statusPengajuan,mandiri|nullable|string',
             'tglMulai' => 'required|date',
             // Logika durasi bisa ditambahkan di custom rule jika perlu
             'tglSelesai' => 'required|date|after:tglMulai',
@@ -41,15 +41,12 @@ class SampleRegisterController extends Controller
         } else {
             $rules = array_merge($rules, [
                 'institusi' => 'required|string',
-                'nim' => 'required|string',
                 'fakultas' => 'required|string',
                 'semester' => 'required|string',
                 'pembimbing' => 'required|string',
                 'kontakPembimbing' => 'required|string',
                 'jumlahPeserta' => 'required|integer',
                 'suratPengantar' => 'required|file|mimes:pdf|max:10240',
-                'transkrip' => 'required|file|mimes:pdf|max:10240',
-                'fotoInstitusi' => 'required|file|mimes:jpg,jpeg,png|max:10240',
             ]);
         }
 
@@ -68,19 +65,17 @@ class SampleRegisterController extends Controller
         if ($request->hasFile('ktpMandiri')) $paths['ktp_path'] = $request->file('ktpMandiri')->store('uploads/ktp', 'public');
         if ($request->hasFile('fotoMandiri')) $paths['foto_path'] = $request->file('fotoMandiri')->store('uploads/foto', 'public');
         if ($request->hasFile('suratPengantar')) $paths['surat_pengantar_path'] = $request->file('suratPengantar')->store('uploads/surat', 'public');
-        if ($request->hasFile('transkrip')) $paths['transkrip_path'] = $request->file('transkrip')->store('uploads/transkrip', 'public');
-        if ($request->hasFile('fotoInstitusi')) $paths['foto_path'] = $request->file('fotoInstitusi')->store('uploads/foto', 'public');
         if ($request->hasFile('proposal')) $paths['proposal_path'] = $request->file('proposal')->store('uploads/proposal', 'public');
 
         // Simpan Data
         MagangApplication::create(array_merge([
             'status_pengajuan' => $request->statusPengajuan,
-            'nama' => $request->nama,
-            'no_hp' => $request->kontakHp,
-            'email' => $request->email,
-            'nik' => $request->nik,
-            'tgl_lahir' => $request->tglLahir,
-            'alamat' => $request->alamat,
+            'nama' => $request->nama ?? '-',
+            'no_hp' => $request->kontakHp ?? '-',
+            'email' => $request->email ?? '-',
+            'nik' => $request->nik ?? '-',
+            'tgl_lahir' => $request->tglLahir ?? now()->format('Y-m-d'),
+            'alamat' => $request->alamat ?? '-',
             'tgl_mulai' => $request->tglMulai,
             'tgl_selesai' => $request->tglSelesai,
             'tujuan' => $request->tujuan,
@@ -92,7 +87,7 @@ class SampleRegisterController extends Controller
 
             // Institusi
             'institusi' => $request->institusi,
-            'nim' => $request->nim,
+            'nim' => $request->nim ?? '-',
             'fakultas' => $request->fakultas,
             'semester' => $request->semester,
             'pembimbing' => $request->pembimbing,

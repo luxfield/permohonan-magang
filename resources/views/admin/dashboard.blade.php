@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /> 
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Admin Dashboard - Magang Kejari</title>
   @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -14,10 +14,10 @@
       <div class="flex items-center justify-between h-16">
         <div class="flex items-center gap-3">
           <div class="h-8 w-8 rounded bg-white/20 grid place-items-center font-bold text-sm">KN</div>
-          <span class="font-bold text-lg">Admin Panel</span>
+          <span class="font-bold text-lg">Admin Panel Kejaksaan Negeri Kabupaten Tegal</span>
         </div>
         <div class="flex items-center gap-4">
-          <span class="text-sm text-emerald-100">Halo, {{ Auth::user()->name ?? 'Admin' }}</span>
+          <span class="text-sm text-emerald-100">Halo, {{ Auth::user()->name ?? 'Admin' }} Kab. Tegal</span>
           <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit" class="text-sm bg-emerald-800 hover:bg-emerald-700 px-3 py-1.5 rounded-lg transition">
@@ -52,7 +52,7 @@
               <th class="px-4 py-3">Bidang & Waktu</th>
               <th class="px-4 py-3">Berkas Pengajuan</th>
               <th class="px-4 py-3">Berkas Makalah</th>
-              <th class="px-4 py-3 text-right">Aksi</th>
+              <th class="px-4 py-3 text-center">Aksi</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100">
@@ -60,16 +60,26 @@
               <tr class="hover:bg-slate-50 transition">
                 <td class="px-4 py-3 font-mono text-xs text-slate-500">#{{ $app->id }}</td>
                 <td class="px-4 py-3">
-                  <div class="font-bold text-slate-900">{{ $app->nama }}</div>
-                  <div class="text-xs text-slate-500">{{ $app->email }}</div>
-                  <div class="text-xs text-slate-500">{{ $app->no_hp }}</div>
-                  <div class="text-[10px] text-slate-400 mt-1">NIK: {{ $app->nik }}</div>
+                  @if($app->status_pengajuan === 'mandiri')
+                    <div class="font-bold text-slate-900">{{ $app->nama }}</div>
+                    <div class="text-xs text-slate-500">{{ $app->email }}</div>
+                    <div class="text-xs text-slate-500">{{ $app->no_hp }}</div>
+                    <div class="text-[10px] text-slate-400 mt-1">NIK: {{ $app->nik }}</div>
+                  @else
+                    <div class="font-bold text-slate-900">{{ $app->pembimbing }}</div>
+                    <div class="text-xs text-slate-500">{{ $app->kontak_pembimbing }}</div>
+                    <div class="text-[10px] text-slate-400 mt-1">Pembimbing</div>
+                  @endif
                 </td>
                 <td class="px-4 py-3">
                   @if($app->status_pengajuan === 'mandiri')
                     <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 mb-1">MANDIRI</span>
                     <div class="text-xs">{{ $app->pendidikan_asal ?? '-' }}</div>
                     <div class="text-xs text-slate-500">{{ $app->prodi ?? '-' }}</div>
+                  @elseif($app->status_pengajuan === 'kejuruan')
+                    <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 text-purple-800 mb-1">KEJURUAN</span>
+                    <div class="text-xs">{{ $app->institusi ?? '-' }}</div>
+                    <div class="text-xs text-slate-500">Kelas {{ $app->semester }}</div>
                   @else
                     <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-100 text-sky-800 mb-1">INSTITUSI</span>
                     <div class="text-xs">{{ $app->institusi ?? '-' }}</div>
