@@ -17,7 +17,7 @@
           <span class="font-bold text-lg">Admin Panel Kejaksaan Negeri Kabupaten Tegal</span>
         </div>
         <div class="flex items-center gap-4">
-          <span class="text-sm text-emerald-100">Halo, {{ Auth::user()->name ?? 'Admin' }} Kab. Tegal</span>
+          <span class="text-sm text-emerald-100">Halo, {{ auth()->user()->name ?? 'Admin' }} Kab. Tegal</span>
           <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit" class="text-sm bg-emerald-800 hover:bg-emerald-700 px-3 py-1.5 rounded-lg transition">
