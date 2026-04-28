@@ -26,6 +26,7 @@ class MagangStatusController extends Controller
                                   ->orWhere('nim', $request->identifier);
                         })
                         ->where('tgl_lahir', $request->tgl_lahir)
+                        ->orderBy('id', 'desc')
                         ->first();
 
         if (!$application) {
