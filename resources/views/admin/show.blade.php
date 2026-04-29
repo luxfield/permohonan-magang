@@ -35,6 +35,8 @@
           @endif
             @if($application->status_pengajuan === 'mandiri')
             <span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">MANDIRI</span>
+            @elseif($application->status_pengajuan === 'kejuruan')
+            <span class="px-3 py-1 rounded-full text-xs font-bold bg-purple-100 text-purple-800 border border-purple-200">KEJURUAN</span>
           @else
             <span class="px-3 py-1 rounded-full text-xs font-bold bg-sky-100 text-sky-800 border border-sky-200">INSTITUSI</span>
           @endif
@@ -247,11 +249,11 @@
                                     <div>
                                         <label class="block text-xs font-medium text-slate-600 mb-1">Email</label>
                                         <input type="email" name="email" value="{{ $intern->email }}" required class="w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
-                                        <label class="block text-xs font-medium text-slate-600 mb-1">NIM / NIS / NIK</label>
+                                        <label class="block text-xs font-medium text-slate-600 mb-1 mt-4">NIM / NIS / NIK</label>
                                         <input type="text" name="nim" value="{{ $intern->nim }}" required class="w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
                                     </div>
                                     <div>
-                                        <label class="block text-xs font-medium text-slate-600 mb-1">NIM / NIS</label>
+                                        <label class="block text-xs font-medium text-slate-600 mb-1 mt-4">NIM / NIS</label>
                                         <input type="text" name="nim" value="{{ $intern->nim }}" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
                                         <label class="block text-xs font-medium text-slate-600 mb-1">Tanggal Lahir</label>
                                         <input type="date" name="tanggal_lahir" value="{{ $intern->tanggal_lahir }}" required class="w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
@@ -281,13 +283,11 @@
                         <div>
                             <label for="email" class="block text-xs font-medium text-slate-600 mb-1">Email Peserta</label>
                             <input type="email" name="email" id="email" required class="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm" placeholder="Email aktif untuk login">
-                            <label for="nim" class="block text-xs font-medium text-slate-600 mb-1">NIM / NIS / NIK</label>
+                            <label for="nim" class="block text-xs font-medium text-slate-600 mb-1 mt-4">NIM / NIS / NIK</label>
                             <input type="text" name="nim" id="nim" required class="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm" placeholder="Nomor Induk Mahasiswa/Siswa/Kependudukan">
                         </div>
                         <div>
-                            <label for="nim" class="block text-xs font-medium text-slate-600 mb-1">NIM / NIS (Opsional)</label>
-                            <input type="text" name="nim" id="nim" class="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm" placeholder="Nomor Induk Mahasiswa/Siswa">
-                            <label for="tanggal_lahir" class="block text-xs font-medium text-slate-600 mb-1">Tanggal Lahir</label>
+                            <label for="tanggal_lahir" class="block text-xs font-medium text-slate-600 mb-1 mt-4">Tanggal Lahir</label>
                             <input type="date" name="tanggal_lahir" id="tanggal_lahir" required class="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm">
                         </div>
                         <div class="flex justify-end">
@@ -305,7 +305,7 @@
                 @endif
 
                 {{-- Display success/error messages from session --}}
-                @if(session('success') && Str::contains(session('success'), 'Akun untuk'))
+                @if(session('success') && \Illuminate\Support\Str::contains(session('success'), 'Akun untuk'))
                     <div class="mt-4 bg-emerald-100 border border-emerald-300 text-emerald-800 px-4 py-3 rounded-lg text-sm">
                         {{ session('success') }}
                     </div>
@@ -384,6 +384,75 @@
 
         </div>
     </div>
+
+    <!-- Kinerja History (Full Width) -->
+    @if($application->status === 'diterima')
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 mt-6">
+        <div class="border-b border-slate-100 pb-3 mb-4 flex justify-between items-center">
+            <h3 class="font-bold text-slate-800">Riwayat Laporan Kinerja</h3>
+            <span class="text-sm text-slate-500 font-medium">
+                {{ $kinerjas->count() }} Laporan
+            </span>
+        </div>
+
+        @if($kinerjas->isEmpty())
+            <div class="text-center py-6 text-slate-500 text-sm border border-dashed border-slate-300 rounded-xl">Belum ada laporan kinerja yang diunggah.</div>
+        @else
+            <div class="overflow-x-auto border border-slate-200 rounded-xl">
+                <table class="w-full text-sm text-left">
+                    <thead class="bg-slate-100 text-slate-600 font-bold border-b border-slate-200">
+                        <tr>
+                            <th class="px-4 py-3">Tanggal</th>
+                            <th class="px-4 py-3">Judul & Deskripsi</th>
+                            <th class="px-4 py-3">Komentar Admin</th>
+                            <th class="px-4 py-3 text-center">Bukti</th>
+                            <th class="px-4 py-3 text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200 bg-white">
+                        @foreach($kinerjas as $kinerja)
+                            <tr class="hover:bg-slate-50 transition">
+                                <td class="px-4 py-3 whitespace-nowrap text-slate-500 align-top">{{ $kinerja->created_at->format('d M Y, H:i') }}</td>
+                                <td class="px-4 py-3 align-top">
+                                    <div class="font-medium text-slate-900 mb-1">{{ $kinerja->judul }}</div>
+                                    <div class="text-slate-600 text-xs">{{ $kinerja->deskripsi }}</div>
+                                </td>
+                                <td class="px-4 py-3 align-top text-xs text-slate-600">{{ $kinerja->komentar_admin ?: '-' }}</td>
+                                <td class="px-4 py-3 text-center align-top">
+                                    <a href="{{ asset('storage/' . $kinerja->file_path) }}" target="_blank" class="inline-flex items-center gap-1 text-emerald-600 hover:text-emerald-800 hover:underline">
+                                        Lihat File
+                                    </a>
+                                </td>
+                                <td class="px-4 py-3 text-center align-top whitespace-nowrap">
+                                    <button type="button" onclick="toggleEdit('edit-kinerja-{{ $kinerja->id }}')" class="text-xs font-bold text-amber-600 hover:text-amber-800 hover:bg-amber-100 bg-amber-50 px-2 py-1 rounded transition mr-1">Edit / Komentar</button>
+                                    <form action="{{ route('admin.kinerja.destroy', $kinerja->id) }}" method="POST" class="inline" onsubmit="return confirm('Yakin ingin menghapus kinerja ini?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-xs font-bold text-rose-600 hover:text-rose-800 hover:bg-rose-100 bg-rose-50 px-2 py-1 rounded transition">Hapus</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <tr id="edit-kinerja-{{ $kinerja->id }}" class="hidden bg-slate-50 border-b border-slate-200">
+                                <td colspan="5" class="px-4 py-4">
+                                    <form action="{{ route('admin.kinerja.update', $kinerja->id) }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        @csrf @method('PUT')
+                                        <div><label class="block text-xs font-medium text-slate-600 mb-1">Judul Kinerja</label><input type="text" name="judul" value="{{ $kinerja->judul }}" required class="w-full rounded border border-slate-300 px-3 py-1.5 text-sm"></div>
+                                        <div><label class="block text-xs font-medium text-slate-600 mb-1">Deskripsi Kinerja</label><textarea name="deskripsi" required class="w-full rounded border border-slate-300 px-3 py-1.5 text-sm" rows="2">{{ $kinerja->deskripsi }}</textarea></div>
+                                        <div class="md:col-span-2"><label class="block text-xs font-medium text-slate-600 mb-1">Komentar Admin</label><textarea name="komentar_admin" class="w-full rounded border border-slate-300 px-3 py-1.5 text-sm" rows="2" placeholder="Berikan komentar untuk kinerja ini...">{{ $kinerja->komentar_admin }}</textarea></div>
+                                        <div class="md:col-span-2 flex justify-end gap-2 mt-2">
+                                            <button type="button" onclick="toggleEdit('edit-kinerja-{{ $kinerja->id }}')" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-bold transition">Batal</button>
+                                            <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition">Simpan Perubahan</button>
+                                        </div>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
+    </div>
+    @endif
 
   </main>
 
