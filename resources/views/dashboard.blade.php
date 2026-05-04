@@ -192,7 +192,7 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
       <div class="max-w-4xl mx-auto p-8 sm:p-14 rounded-3xl bg-gradient-to-br from-yellow-300 to-yellow-500 text-emerald-950 text-center shadow-2xl reveal transition-all duration-700 ease-out opacity-0 translate-y-6 [&.visible]:opacity-100 [&.visible]:translate-y-0">
         <h2 class="text-4xl lg:text-5xl font-black leading-tight tracking-tight">Siap memulai pengalaman magang?</h2>
-        <p class="max-w-2xl mx-auto mt-5 text-emerald-900/80 text-lg leading-loose">Bergabung dan kelola seluruh proses magang secara lebih transparan, modern, dan terintegrasi.</p>
+        <p class="max-w-2xl mx-auto mt-5 text-emerald-900/80 text-lg leading-loose">Bergabung dan kelola seluruh proses magang secara lebih transparan,  modern, dan terintegrasi.</p>
         <a href="#" class="mt-8 inline-flex items-center justify-center gap-2.5 min-h-[48px] px-7 rounded-full font-extrabold transition duration-200 ease-in-out bg-emerald-950 text-white hover:bg-emerald-900 hover:-translate-y-px">Masuk Sekarang →</a>
       </div>
     </div>
