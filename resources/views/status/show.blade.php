@@ -80,7 +80,16 @@
 
         <!-- Tombol Aksi (Hanya jika Diterima) -->
         @if($application->status === 'diterima')
-          <div class="border-t border-slate-100 pt-6 mt-6">
+        <div class="border-t border-slate-100 pt-6 mt-6">
+            <h3 class="font-bold text-slate-800 mb-3">Unggah Kinerja Harian</h3>
+            <p class="text-sm text-slate-600 mb-4">Untuk melengkapi proses magang, silakan unggah Kinerja Harian pada halaman berikut.</p>
+            
+            <a href="{{ route('status.kinerja.form', $application->id) }}" class="inline-flex items-center justify-center w-full bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-3 rounded-xl text-sm font-bold transition shadow-sm hover:shadow-md">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+              Halaman Upload Kinerja Harian
+            </a>
+          </div>  
+        <div class="border-t border-slate-100 pt-6 mt-6">
             <h3 class="font-bold text-slate-800 mb-3">Tindak Lanjut</h3>
             <p class="text-sm text-slate-600 mb-4">Untuk melengkapi proses magang, silakan unggah Laporan Akhir pada halaman berikut.</p>
             

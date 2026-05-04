@@ -224,7 +224,7 @@
                                         <span class="mx-1">•</span> NIM: {{ $intern->nim }}
                                         @endif
                                     <p class="text-xs text-slate-500">NIM / NIS: <span class="font-semibold">{{ $intern->nim }}</span>
-                                        <span class="mx-1">•</span> Tgl Lahir: {{ \Carbon\Carbon::parse($intern->tanggal_lahir)->format('d M Y') }}
+                                        <span class="mx-1">•</span> Tgl Lahir: {{ \Carbon\Carbon::parse($intern->tgl_lahir)->format('d M Y') }}
                                     </p>
                                 </div>
                                 <div class="flex items-center gap-2">
@@ -253,10 +253,8 @@
                                         <input type="text" name="nim" value="{{ $intern->nim }}" required class="w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
                                     </div>
                                     <div>
-                                        <label class="block text-xs font-medium text-slate-600 mb-1 mt-4">NIM / NIS</label>
-                                        <input type="text" name="nim" value="{{ $intern->nim }}" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
                                         <label class="block text-xs font-medium text-slate-600 mb-1">Tanggal Lahir</label>
-                                        <input type="date" name="tanggal_lahir" value="{{ $intern->tanggal_lahir }}" required class="w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
+                                        <input type="date" name="tgl_lahir" value="{{ $intern->tgl_lahir }}" required class="w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
                                     </div>
                                     <div class="flex justify-end gap-2">
                                         <button type="button" onclick="toggleEdit('edit-intern-{{ $intern->id }}')" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-bold transition">Batal</button>
@@ -287,8 +285,8 @@
                             <input type="text" name="nim" id="nim" required class="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm" placeholder="Nomor Induk Mahasiswa/Siswa/Kependudukan">
                         </div>
                         <div>
-                            <label for="tanggal_lahir" class="block text-xs font-medium text-slate-600 mb-1 mt-4">Tanggal Lahir</label>
-                            <input type="date" name="tanggal_lahir" id="tanggal_lahir" required class="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm">
+                            <label for="tgl_lahir" class="block text-xs font-medium text-slate-600 mb-1 mt-4">Tanggal Lahir</label>
+                            <input type="date" name="tgl_lahir" id="tgl_lahir" required class="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm">
                         </div>
                         <div class="flex justify-end">
                             <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-bold text-sm transition shadow-sm flex justify-center items-center gap-2">
@@ -305,7 +303,7 @@
                 @endif
 
                 {{-- Display success/error messages from session --}}
-                @if(session('success') && \Illuminate\Support\Str::contains(session('success'), 'Akun untuk'))
+                @if(session('success') && \Illuminate\Support\Str::contains(session('success'),  'Akun untuk'))
                     <div class="mt-4 bg-emerald-100 border border-emerald-300 text-emerald-800 px-4 py-3 rounded-lg text-sm">
                         {{ session('success') }}
                     </div>

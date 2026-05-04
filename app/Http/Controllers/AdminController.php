@@ -22,7 +22,8 @@ class AdminController extends Controller
     public function show($id)
     {
         $application = MagangApplication::with('interns.user')->findOrFail($id);
-        return view('admin.show', compact('application'));
+        $kinerjas = \App\Models\MagangKinerja::where('magang_application_id', $id)->latest()->get();
+        return view('admin.show', compact('application', 'kinerjas'));
     }
 
     public function updateStatus(Request $request, $id)
@@ -51,6 +52,7 @@ class AdminController extends Controller
             'nama' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email',
             'nim' => 'nullable|string|max:255',
+            'tgl_lahir' => 'required|date'
         ]);
 
         // 2. Cek kuota peserta
@@ -75,6 +77,7 @@ class AdminController extends Controller
                     'nama' => $validated['nama'],
                     'email' => $validated['email'],
                     'nim' => $validated['nim'],
+                    'tgl_lahir' => $validated['tgl_lahir'],
                 ]);
             });
         } catch (\Throwable $e) {
@@ -95,6 +98,7 @@ class AdminController extends Controller
             // Abaikan validasi unique untuk email milik user itu sendiri
             'email' => 'required|email|max:255|unique:users,email,' . $user->id,
             'nim' => 'nullable|string|max:255',
+            'tgl_lahir' => 'required|date'
         ]);
 
         DB::transaction(function () use ($intern, $user, $validated) {
@@ -153,6 +157,38 @@ class AdminController extends Controller
         });
 
         return redirect()->route('admin.dashboard')->with('success', 'Data pendaftar dan akun peserta terkait berhasil dihapus.');
+    }
+
+    public function updateKinerja(Request $request, $id)
+    {
+        $kinerja = \App\Models\MagangKinerja::findOrFail($id);
+        
+        $request->validate([
+            'judul' => 'required|string|max:255',
+            'deskripsi' => 'required|string',
+            'komentar_admin' => 'nullable|string',
+        ]);
+
+        $kinerja->update([
+            'judul' => $request->judul,
+            'deskripsi' => $request->deskripsi,
+            'komentar_admin' => $request->komentar_admin,
+        ]);
+
+        return back()->with('success', 'Laporan kinerja berhasil diperbarui.');
+    }
+
+    public function deleteKinerja($id)
+    {
+        $kinerja = \App\Models\MagangKinerja::findOrFail($id);
+        
+        if ($kinerja->file_path && Storage::disk('public')->exists($kinerja->file_path)) {
+            Storage::disk('public')->delete($kinerja->file_path);
+        }
+
+        $kinerja->delete();
+
+        return back()->with('success', 'Laporan kinerja berhasil dihapus.');
     }
 
     public function previewFile(Request $request)
