@@ -254,11 +254,11 @@
                                     </div>
                                     <div>
                                         <label class="block text-xs font-medium text-slate-600 mb-1">Tanggal Lahir</label>
-                                        <input type="date" name="tgl_lahir" value="{{ $intern->tgl_lahir }}" required class="w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
+                                        <input type="date" name="tgl_lahir" value="{{ \Carbon\Carbon::parse($intern->tgl_lahir)->format('Y-m-d') }}" required class="w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
                                     </div>
                                     <div class="flex justify-end gap-2">
                                         <button type="button" onclick="toggleEdit('edit-intern-{{ $intern->id }}')" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-bold transition">Batal</button>
-                                        <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition">Simpan Perubahan</button>
+                                        <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition">Update Perubahan</button>
                                     </div>
                                 </form>
                             </div>
