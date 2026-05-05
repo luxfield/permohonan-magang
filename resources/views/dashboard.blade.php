@@ -28,7 +28,7 @@
           <a href="#statistik" class="hover:text-yellow-300 transition-colors">Statistik</a>
         </div>
 
-        <a href="#" class="hidden lg:inline-flex items-center justify-center gap-2.5 min-h-[48px] px-7 rounded-full font-extrabold transition duration-200 ease-in-out bg-yellow-400 text-emerald-950 hover:bg-yellow-300 hover:-translate-y-px">Buat Permohonan</a>
+        <a href="{{ route('sample.register.index') }}" class="hidden lg:inline-flex items-center justify-center gap-2.5 min-h-[48px] px-7 rounded-full font-extrabold transition duration-200 ease-in-out bg-yellow-400 text-emerald-950 hover:bg-yellow-300 hover:-translate-y-px">Buat Permohonan</a>
         <button class="lg:hidden grid place-items-center w-10 h-10 rounded-lg bg-white/10 text-white text-2xl" id="mobileToggle" aria-label="Buka menu">☰</button>
       </nav>
 
