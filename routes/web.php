@@ -11,7 +11,7 @@ Route::get('/', function () {
     if (auth()->check()) {
         return redirect()->route('admin.dashboard');
     }
-    return view('dashboard');
+    return view('home');
 })->name('home');
 
 Route::get('/sample-register', [MagangRegisterController::class, 'index'])->name('sample.register.index');
