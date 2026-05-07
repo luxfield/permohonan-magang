@@ -21,28 +21,42 @@ class MagangStatusController extends Controller
             'tgl_lahir' => 'required|date',
         ]);
 
-        // Cari data berdasarkan (NIK atau NIM) DAN Tanggal Lahir
-        $application = MagangApplication::where(function ($query) use ($request) {
-            $query->where('nik', $request->identifier)
-                ->orWhere('nim', $request->identifier);
-        })
-            ->where('tgl_lahir', $request->tgl_lahir)
-            ->orderBy('id', 'desc')
-            ->first();
-
         $intern_user = Intern::where(function ($query) use ($request) {
             $query->Where('nim', $request->identifier);
         })->where('tgl_lahir', $request->tgl_lahir)->orderBy('id', 'desc')->first();
+
+        if (! $intern_user) {
+            // Cari data berdasarkan (NIK atau NIM) DAN Tanggal Lahir
+            $application = MagangApplication::where(function ($query) use ($request) {
+                $query->where('nik', $request->identifier)
+                    ->orWhere('nim', $request->identifier);
+            })
+                ->where('tgl_lahir', $request->tgl_lahir)
+                ->orderBy('id', 'desc')
+                ->first();
+
+        } else {
+            // Cari data berdasarkan (NIK atau NIM) DAN Tanggal Lahir
+            $application = MagangApplication::where(function ($query) use ($intern_user) {
+                $query->where('id', $intern_user->magang_application_id);
+            })->first();
+
+        }
 
         if (! $application && ! $intern_user) {
             return back()->with('error', 'Data tidak ditemukan. Pastikan NIK/NIM dan Tanggal Lahir sesuai.');
         }
 
         // Simpan ID ke session untuk verifikasi keamanan saat upload
-        session(['verified_magang_id' => $application->id || $intern_user->id]);
+        session(['verified_magang_id' => $application->id]);
+        if ($intern_user) {
+            session(['verified_intern_id' => $intern_user->id]);
+        } else {
+            session()->forget('verified_intern_id');
+        }
 
         // Tampilkan halaman detail status
-        return view('status.show', compact('application'));
+        return view('status.show', compact('application','intern_user'));
     }
 
     public function uploadForm($id)
@@ -115,7 +129,13 @@ class MagangStatusController extends Controller
             abort(403, 'Anda tidak memiliki akses ke halaman ini.');
         }
 
-        $kinerjas = \App\Models\MagangKinerja::where('magang_application_id', $id)->latest()->get();
+        $query = \App\Models\MagangKinerja::where('magang_application_id', $id);
+        
+        if (session()->has('verified_intern_id')) {
+            $query->where('intern_id', session('verified_intern_id'));
+        }
+
+        $kinerjas = $query->latest()->get();
 
         return view('status.kinerja', compact('application', 'kinerjas'));
     }
@@ -142,6 +162,7 @@ class MagangStatusController extends Controller
 
         \App\Models\MagangKinerja::create([
             'magang_application_id' => $application->id,
+            'intern_id' => session('verified_intern_id'),
             'judul' => $request->judul,
             'deskripsi' => $request->deskripsi,
             'file_path' => $path,

@@ -55,7 +55,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
           <div>
             <span class="block text-slate-500 text-xs">Nama Lengkap</span>
-            <span class="font-medium text-slate-800">{{ $application->nama }}</span>
+            <span class="font-medium text-slate-800">{{ $application->nama == '-'?$intern_user->nama : $application->nama}}</span>
           </div>
           <div>
             <span class="block text-slate-500 text-xs">Institusi / Asal</span>

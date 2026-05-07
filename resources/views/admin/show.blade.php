@@ -228,6 +228,7 @@
                                     </p>
                                 </div>
                                 <div class="flex items-center gap-2">
+                                    <a href="{{ route('admin.show', ['id' => $application->id, 'intern_id' => $intern->id]) }}#kinerja" class="text-xs font-bold text-sky-600 hover:text-sky-800 hover:bg-sky-100 bg-sky-50 px-2 py-1 rounded transition">Lihat Kinerja</a>
                                     <button type="button" onclick="toggleEdit('edit-intern-{{ $intern->id }}')" class="text-xs font-bold text-amber-600 hover:text-amber-800 hover:bg-amber-100 bg-amber-50 px-2 py-1 rounded transition">Edit</button>
                                     <form action="{{ route('admin.interns.destroy', $intern->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus peserta ini? Akun login juga akan dihapus secara permanen.');" class="inline">
                                         @csrf
@@ -385,9 +386,22 @@
 
     <!-- Kinerja History (Full Width) -->
     @if($application->status === 'diterima')
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 mt-6">
+    <div id="kinerja" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 mt-6 scroll-mt-24">
         <div class="border-b border-slate-100 pb-3 mb-4 flex justify-between items-center">
-            <h3 class="font-bold text-slate-800">Riwayat Laporan Kinerja</h3>
+            <div class="flex items-center gap-3">
+                <h3 class="font-bold text-slate-800">Riwayat Laporan Kinerja</h3>
+                @if(request('intern_id'))
+                    @php $filteredIntern = \App\Models\Intern::find(request('intern_id')); @endphp
+                    @if($filteredIntern)
+                    <span class="px-2 py-1 rounded-full text-xs font-bold bg-sky-100 text-sky-800 border border-sky-200 flex items-center gap-1">
+                        Filter: {{ $filteredIntern->nama }}
+                        <a href="{{ route('admin.show', $application->id) }}#kinerja" class="ml-1 text-sky-600 hover:text-sky-900" title="Hapus Filter">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </a>
+                    </span>
+                    @endif
+                @endif
+            </div>
             <span class="text-sm text-slate-500 font-medium">
                 {{ $kinerjas->count() }} Laporan
             </span>
@@ -401,6 +415,7 @@
                     <thead class="bg-slate-100 text-slate-600 font-bold border-b border-slate-200">
                         <tr>
                             <th class="px-4 py-3">Tanggal</th>
+                            <th class="px-4 py-3">Peserta</th>
                             <th class="px-4 py-3">Judul & Deskripsi</th>
                             <th class="px-4 py-3">Komentar Admin</th>
                             <th class="px-4 py-3 text-center">Bukti</th>
@@ -411,6 +426,13 @@
                         @foreach($kinerjas as $kinerja)
                             <tr class="hover:bg-slate-50 transition">
                                 <td class="px-4 py-3 whitespace-nowrap text-slate-500 align-top">{{ $kinerja->created_at->format('d M Y, H:i') }}</td>
+                                <td class="px-4 py-3 align-top">
+                                    @php $intern = \App\Models\Intern::find($kinerja->intern_id); @endphp
+                                    <span class="font-medium text-slate-800 text-sm">{{ $intern ? $intern->nama : $application->nama }}</span>
+                                    @if($intern && $intern->nim)
+                                    <div class="text-slate-500 text-xs mt-0.5">{{ $intern->nim }}</div>
+                                    @endif
+                                </td>
                                 <td class="px-4 py-3 align-top">
                                     <div class="font-medium text-slate-900 mb-1">{{ $kinerja->judul }}</div>
                                     <div class="text-slate-600 text-xs">{{ $kinerja->deskripsi }}</div>
@@ -431,7 +453,7 @@
                                 </td>
                             </tr>
                             <tr id="edit-kinerja-{{ $kinerja->id }}" class="hidden bg-slate-50 border-b border-slate-200">
-                                <td colspan="5" class="px-4 py-4">
+                                <td colspan="6" class="px-4 py-4">
                                     <form action="{{ route('admin.kinerja.update', $kinerja->id) }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         @csrf @method('PUT')
                                         <div><label class="block text-xs font-medium text-slate-600 mb-1">Judul Kinerja</label><input type="text" name="judul" value="{{ $kinerja->judul }}" required class="w-full rounded border border-slate-300 px-3 py-1.5 text-sm"></div>

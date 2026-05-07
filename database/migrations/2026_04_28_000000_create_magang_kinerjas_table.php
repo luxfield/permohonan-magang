@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('magang_kinerjas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('magang_application_id')->constrained()->onDelete('cascade');
+            $table->foreignId('intern_id')->nullable()->constrained('interns')->onDelete('set null');
             $table->string('judul');
             $table->text('deskripsi');
             $table->string('file_path');

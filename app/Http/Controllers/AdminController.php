@@ -19,10 +19,16 @@ class AdminController extends Controller
         return view('admin.dashboard', compact('applications'));
     }
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $application = MagangApplication::with('interns.user')->findOrFail($id);
-        $kinerjas = \App\Models\MagangKinerja::where('magang_application_id', $id)->latest()->get();
+        
+        $query = \App\Models\MagangKinerja::where('magang_application_id', $id);
+        if ($request->has('intern_id') && $request->intern_id != '') {
+            $query->where('intern_id', $request->intern_id);
+        }
+        $kinerjas = $query->latest()->get();
+        
         return view('admin.show', compact('application', 'kinerjas'));
     }
 

@@ -10,7 +10,10 @@
   <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
     <!-- Bagian Kiri: Form -->
     <div class="lg:col-span-1 bg-white rounded-2xl shadow-sm border border-slate-200 p-6 h-fit">
-      <h2 class="text-xl font-bold mb-4 text-slate-800">Laporan Kinerja Harian</h2>
+      <div class="mb-4 border-b border-slate-100 pb-4">
+        <h2 class="text-xl font-bold text-slate-800">Laporan Kinerja Harian</h2>
+        <p class="text-sm text-slate-500 mt-1">Peserta: {{ \App\Models\Intern::find(session('verified_intern_id'))?->nama ?? $application->nama }}</p>
+      </div>
 
       @if(session('success'))
           <div class="mb-4 bg-emerald-100 border border-emerald-300 text-emerald-800 px-4 py-3 rounded-lg text-sm">

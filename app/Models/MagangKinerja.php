@@ -11,6 +11,7 @@ class MagangKinerja extends Model
 
     protected $fillable = [
         'magang_application_id',
+        'intern_id',
         'judul',
         'deskripsi',
         'file_path',
