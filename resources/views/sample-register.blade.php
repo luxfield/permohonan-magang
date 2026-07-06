@@ -183,17 +183,26 @@
               <div>
                 <label for="suratMandiri" class="text-xs font-bold">Surat Permohonan (PDF)</label>
                 <input id="suratMandiri" name="suratMandiri" type="file" accept=".pdf"
-                       class="mt-1 w-full text-sm file:mr-3 file:rounded-xl file:border-0 file:bg-slate-900/5 file:px-3 file:py-2 file:font-bold file:text-slate-900" />
+                       class="mt-1 w-full text-sm file:mr-3 file:rounded-xl file:border-0 file:bg-slate-900/5 file:px-3 file:py-2 file:font-bold file:text-slate-900 @error('suratMandiri') text-rose-600 @enderror" />
+                @error('suratMandiri')
+                    <p class="text-[11px] text-rose-700 mt-1 font-semibold">{{ $message }}</p>
+                @enderror
               </div>
               <div>
                 <label for="ktpMandiri" class="text-xs font-bold">KTP / NIS / NIM (JPG/PNG/PDF)</label>
                 <input id="ktpMandiri" name="ktpMandiri" type="file" accept=".jpg,.jpeg,.png,.pdf"
-                       class="mt-1 w-full text-sm file:mr-3 file:rounded-xl file:border-0 file:bg-slate-900/5 file:px-3 file:py-2 file:font-bold file:text-slate-900" />
+                       class="mt-1 w-full text-sm file:mr-3 file:rounded-xl file:border-0 file:bg-slate-900/5 file:px-3 file:py-2 file:font-bold file:text-slate-900 @error('ktpMandiri') text-rose-600 @enderror" />
+                @error('ktpMandiri')
+                    <p class="text-[11px] text-rose-700 mt-1 font-semibold">{{ $message }}</p>
+                @enderror
               </div>
               <div>
                 <label for="fotoMandiri" class="text-xs font-bold">Pas Foto (JPG/PNG)</label>
                 <input id="fotoMandiri" name="fotoMandiri" type="file" accept=".jpg,.jpeg,.png"
-                       class="mt-1 w-full text-sm file:mr-3 file:rounded-xl file:border-0 file:bg-slate-900/5 file:px-3 file:py-2 file:font-bold file:text-slate-900" />
+                       class="mt-1 w-full text-sm file:mr-3 file:rounded-xl file:border-0 file:bg-slate-900/5 file:px-3 file:py-2 file:font-bold file:text-slate-900 @error('fotoMandiri') text-rose-600 @enderror" />
+                @error('fotoMandiri')
+                    <p class="text-[11px] text-rose-700 mt-1 font-semibold">{{ $message }}</p>
+                @enderror
               </div>
             </div>
           </div>
@@ -259,12 +268,18 @@
               <div>
                 <label for="suratPengantar" class="text-xs font-bold">Surat Pengantar (PDF)</label>
                 <input id="suratPengantar" name="suratPengantar" type="file" accept=".pdf"
-                       class="mt-1 w-full text-sm file:mr-3 file:rounded-xl file:border-0 file:bg-slate-900/5 file:px-3 file:py-2 file:font-bold file:text-slate-900" />
+                       class="mt-1 w-full text-sm file:mr-3 file:rounded-xl file:border-0 file:bg-slate-900/5 file:px-3 file:py-2 file:font-bold file:text-slate-900 @error('suratPengantar') text-rose-600 @enderror" />
+                @error('suratPengantar')
+                    <p class="text-[11px] text-rose-700 mt-1 font-semibold">{{ $message }}</p>
+                @enderror
               </div>
               <div>
                 <label for="proposal" class="text-xs font-bold">Proposal (opsional)</label>
                 <input id="proposal" name="proposal" type="file" accept=".pdf"
-                       class="mt-1 w-full text-sm file:mr-3 file:rounded-xl file:border-0 file:bg-slate-900/5 file:px-3 file:py-2 file:font-bold file:text-slate-900" />
+                       class="mt-1 w-full text-sm file:mr-3 file:rounded-xl file:border-0 file:bg-slate-900/5 file:px-3 file:py-2 file:font-bold file:text-slate-900 @error('proposal') text-rose-600 @enderror" />
+                @error('proposal')
+                    <p class="text-[11px] text-rose-700 mt-1 font-semibold">{{ $message }}</p>
+                @enderror
               </div>
             </div>
           </div>

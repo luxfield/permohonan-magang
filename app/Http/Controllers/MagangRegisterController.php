@@ -64,7 +64,15 @@ class MagangRegisterController extends Controller
         }
 
         // 3. Jalankan Validasi
-        $validated = $request->validate($rules);
+        $messages = [
+            'suratMandiri.max'   => 'Ukuran file Surat Permohonan maksimal 10MB.',
+            'ktpMandiri.max'     => 'Ukuran file KTP maksimal 10MB.',
+            'fotoMandiri.max'    => 'Ukuran file Pas Foto maksimal 10MB.',
+            'suratPengantar.max' => 'Ukuran file Surat Pengantar maksimal 10MB.',
+            'proposal.max'       => 'Ukuran file Proposal maksimal 10MB.',
+        ];
+
+        $validated = $request->validate($rules, $messages);
 
         // 4. Proses Upload File & Mapping Data
         $data = [
