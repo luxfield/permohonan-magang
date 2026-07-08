@@ -15,7 +15,7 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/sample-register', [MagangRegisterController::class, 'index'])->name('sample.register.index');
-Route::post('/sample-register', [MagangRegisterController::class, 'store'])->name('sample.register.store');
+Route::post('/sample-register', [MagangRegisterController::class, 'store'])->name('sample.register.store')->middleware('throttle:5,1');
 
 // Route tambahan untuk memenuhi kebutuhan Unit Test
 Route::post('/magang', [SampleRegisterController::class, 'store'])->name('test.magang.store');

@@ -33,6 +33,10 @@
     
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
       <h1 class="text-2xl font-bold text-slate-800">Data Pendaftar Magang</h1>
+      <button id="whats-new-btn" class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow transition-all duration-200 cursor-pointer">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+        What's New
+      </button>
     </div>
 
     @if(session('success'))
@@ -168,6 +172,111 @@
       </div>
     </div>
   </main>
+
+  <!-- Modal What's New -->
+  <div id="whats-new-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300 opacity-0">
+    <div class="bg-white rounded-2xl shadow-xl max-w-lg w-full overflow-hidden transform scale-95 transition-all duration-300 opacity-0" id="whats-new-modal-content">
+      <div class="px-6 py-4 bg-emerald-900 text-white flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+          <h2 class="font-bold text-lg">What's New</h2>
+        </div>
+        <button id="close-modal-btn" class="text-white/80 hover:text-white transition cursor-pointer">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+      <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+        <!-- Update 1 -->
+        <div class="flex gap-4">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-red-100 text-red-800 flex items-center justify-center font-bold text-sm"></div>
+          <div>
+            <h3 class="font-semibold text-slate-800 text-sm">v1.0.1-08072024</h3>
+            <ul class="list-disc list-inside text-xs text-slate-500 mt-1 space-y-1">
+              <li>Menambahkan validasi pada saat submit form register</li>
+              <li>Menambahkan proteksi rate limiter pada saat submit form register</li>
+            </ul>
+          </div>
+        </div>
+        <hr class="border-slate-100">
+        <!-- Update 2 -->
+        <div class="flex gap-4">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-yellow-100 text-yellow-800 flex items-center justify-center font-bold text-sm"></div>
+          <div>
+            <h3 class="font-semibold text-slate-800 text-sm">v1.0.0-07072024</h3>
+            <p class="text-xs text-slate-500 mt-1">Perbaikan pada alert register tidak tampil pada saat penggunan unggah data melebihi maksimum</p>
+          </div>
+        </div>
+        <!-- <hr class="border-slate-100"> -->
+        <!-- Update 3 -->
+        <!-- <div class="flex gap-4">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-sm">3</div>
+          <div>
+            <h3 class="font-semibold text-slate-800 text-sm">Pencarian & Penyaringan Pendaftar</h3>
+            <p class="text-xs text-slate-500 mt-1">Sistem pencarian dan penyaringan data pendaftar yang lebih cepat berdasarkan kategori jalur pengajuan (mandiri, kejuruan, atau institusi).</p>
+          </div>
+        </div> -->
+        <!-- <hr class="border-slate-100"> -->
+        <!-- Update 4 -->
+        <!-- <div class="flex gap-4">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-sm">4</div>
+          <div>
+            <h3 class="font-semibold text-slate-800 text-sm">Penyempurnaan UI Dashboard</h3>
+            <p class="text-xs text-slate-500 mt-1">Tampilan dashboard yang lebih responsif dengan nuansa warna Emerald khas Kejaksaan dan navigasi yang lebih intuitif.</p>
+          </div>
+        </div> -->
+      </div>
+      <div class="px-6 py-4 bg-slate-50 flex justify-end">
+        <button id="close-modal-footer-btn" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-sm font-semibold rounded-xl transition cursor-pointer">
+          Tutup
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const modal = document.getElementById('whats-new-modal');
+      const content = document.getElementById('whats-new-modal-content');
+      const openBtn = document.getElementById('whats-new-btn');
+      const closeBtn = document.getElementById('close-modal-btn');
+      const closeFooterBtn = document.getElementById('close-modal-footer-btn');
+
+      function openModal() {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        // Force reflow
+        modal.offsetHeight;
+        modal.classList.remove('opacity-0');
+        modal.classList.add('opacity-100');
+        content.classList.remove('scale-95', 'opacity-0');
+        content.classList.add('scale-100', 'opacity-100');
+      }
+
+      function closeModal() {
+        modal.classList.remove('opacity-100');
+        modal.classList.add('opacity-0');
+        content.classList.remove('scale-100', 'opacity-100');
+        content.classList.add('scale-95', 'opacity-0');
+        
+        // Wait for transition to complete
+        setTimeout(() => {
+          modal.classList.remove('flex');
+          modal.classList.add('hidden');
+        }, 300);
+      }
+
+      if (openBtn) openBtn.addEventListener('click', openModal);
+      if (closeBtn) closeBtn.addEventListener('click', closeModal);
+      if (closeFooterBtn) closeFooterBtn.addEventListener('click', closeModal);
+
+      // Close on clicking backdrop
+      modal.addEventListener('click', function (e) {
+        if (e.target === modal) {
+          closeModal();
+        }
+      });
+    });
+  </script>
 
 </body>
 </html>

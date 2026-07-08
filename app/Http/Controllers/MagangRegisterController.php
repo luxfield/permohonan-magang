@@ -35,6 +35,7 @@ class MagangRegisterController extends Controller
             ],
             'tujuan'          => 'required|string',
             'pernyataan'      => 'accepted',
+	    'captcha' 	      => 'required|captcha' 
         ];
 
         // 2. Aturan Tambahan Berdasarkan Status Pengajuan
@@ -70,6 +71,8 @@ class MagangRegisterController extends Controller
             'fotoMandiri.max'    => 'Ukuran file Pas Foto maksimal 10MB.',
             'suratPengantar.max' => 'Ukuran file Surat Pengantar maksimal 10MB.',
             'proposal.max'       => 'Ukuran file Proposal maksimal 10MB.',
+	    'captcha.required' 	 => 'Kode captcha wajib diisi.',
+    	    'captcha.captcha'  	 => 'Kode captcha tidak sesuai.',
         ];
 
         $validated = $request->validate($rules, $messages);
