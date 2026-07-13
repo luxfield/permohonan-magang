@@ -2,8 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Http\Controllers\MagangController;
-use App\Models\MagangApplication;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Route;
@@ -14,14 +12,7 @@ class MagangApplicationTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        
-        // Kita definisikan route sementara agar test ini spesifik menargetkan MagangController
-        // terlepas dari konfigurasi routes/web.php saat ini.
-        Route::post('/test/magang/store', [MagangController::class, 'store'])->name('test.magang.store');
-    }
+    // setUp removed because we use the real sample.register.store route directly
 
     public function test_pengajuan_magang_mandiri_berhasil_disimpan()
     {
@@ -32,7 +23,7 @@ class MagangApplicationTest extends TestCase
         $fileKtp = UploadedFile::fake()->create('ktp.jpg', 1000, 'image/jpeg');
         $fileFoto = UploadedFile::fake()->create('foto.jpg', 1000, 'image/jpeg');
 
-        $response = $this->post(route('test.magang.store'), [
+        $response = $this->post(route('sample.register.store'), [
             'statusPengajuan' => 'mandiri',
             'nama' => 'Budi Santoso',
             'kontakHp' => '081234567890',
@@ -45,7 +36,7 @@ class MagangApplicationTest extends TestCase
             'bidang' => ['Pidum', 'Pidsus'],
             'tujuan' => 'Mencari pengalaman',
             'pernyataan' => 'on',
-            
+
             // Field Khusus Mandiri
             'pendidikanAsal_m' => 'Universitas Indonesia',
             'prodi_m' => 'Hukum',
@@ -68,9 +59,9 @@ class MagangApplicationTest extends TestCase
         ]);
 
         // Assert File Storage
-        Storage::disk('public')->assertExists('uploads/surat/' . $fileSurat->hashName());
-        Storage::disk('public')->assertExists('uploads/ktp/' . $fileKtp->hashName());
-        Storage::disk('public')->assertExists('uploads/foto/' . $fileFoto->hashName());
+        Storage::disk('public')->assertExists('uploads/surat/'.$fileSurat->hashName());
+        Storage::disk('public')->assertExists('uploads/ktp/'.$fileKtp->hashName());
+        Storage::disk('public')->assertExists('uploads/foto/'.$fileFoto->hashName());
     }
 
     public function test_pengajuan_magang_institusi_berhasil_disimpan()
@@ -81,7 +72,7 @@ class MagangApplicationTest extends TestCase
         $fileTranskrip = UploadedFile::fake()->create('transkrip.pdf', 1000, 'application/pdf');
         $fileFoto = UploadedFile::fake()->create('foto.jpg', 1000, 'image/jpeg');
 
-        $response = $this->post(route('test.magang.store'), [
+        $response = $this->post(route('sample.register.store'), [
             'statusPengajuan' => 'institusi',
             'nama' => 'Siti Aminah',
             'kontakHp' => '089876543210',
@@ -109,7 +100,7 @@ class MagangApplicationTest extends TestCase
         ]);
 
         $response->assertSessionHas('success');
-        
+
         $this->assertDatabaseHas('magang_applications', [
             'nama' => 'Siti Aminah',
             'status_pengajuan' => 'institusi',
@@ -120,10 +111,10 @@ class MagangApplicationTest extends TestCase
 
     public function test_validasi_gagal_jika_data_tidak_lengkap()
     {
-        $response = $this->post(route('test.magang.store'), []);
+        $response = $this->post(route('sample.register.store'), []);
 
         $response->assertSessionHasErrors([
-            'statusPengajuan', 'nama', 'email', 'nik', 'kontakHp', 'tglLahir'
+            'statusPengajuan', 'nama', 'email', 'nik', 'kontakHp', 'tglLahir',
         ]);
     }
 }

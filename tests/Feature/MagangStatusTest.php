@@ -4,6 +4,7 @@ use App\Models\MagangApplication;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+
 use function Pest\Laravel\get;
 use function Pest\Laravel\post;
 
@@ -25,7 +26,7 @@ test('check status returns error when application not found', function () {
         'identifier' => '1234567890123456',
         'tgl_lahir' => '2000-01-01',
     ])
-    ->assertSessionHas('error', 'Data tidak ditemukan. Pastikan NIK/NIM dan Tanggal Lahir sesuai.');
+        ->assertSessionHas('error', 'Data tidak ditemukan. Pastikan NIK/NIM dan Tanggal Lahir sesuai.');
 });
 
 test('check status finds application by nik and date of birth', function () {
@@ -41,7 +42,7 @@ test('check status finds application by nik and date of birth', function () {
         'tgl_mulai' => now()->addDays(1),
         'tgl_selesai' => now()->addDays(32),
         'tujuan' => 'Magang',
-        'status' => 'pending'
+        'status' => 'pending',
     ]);
 
     // Act & Assert
@@ -49,11 +50,11 @@ test('check status finds application by nik and date of birth', function () {
         'identifier' => '1234567890123456',
         'tgl_lahir' => '2000-01-01',
     ])
-    ->assertOk()
-    ->assertViewIs('status.show')
-    ->assertViewHas('application', function ($viewApp) use ($app) {
-        return $viewApp->id === $app->id;
-    });
+        ->assertOk()
+        ->assertViewIs('status.show')
+        ->assertViewHas('application', function ($viewApp) use ($app) {
+            return $viewApp->id === $app->id;
+        });
 });
 
 test('check status finds application by nim and date of birth', function () {
@@ -70,7 +71,7 @@ test('check status finds application by nim and date of birth', function () {
         'tgl_mulai' => now()->addDays(1),
         'tgl_selesai' => now()->addDays(32),
         'tujuan' => 'PKL',
-        'status' => 'pending'
+        'status' => 'pending',
     ]);
 
     // Act & Assert
@@ -78,8 +79,8 @@ test('check status finds application by nim and date of birth', function () {
         'identifier' => 'MHS123',
         'tgl_lahir' => '2001-05-05',
     ])
-    ->assertOk()
-    ->assertViewIs('status.show');
+        ->assertOk()
+        ->assertViewIs('status.show');
 });
 
 test('upload report fails if status is not diterima', function () {
@@ -94,13 +95,14 @@ test('upload report fails if status is not diterima', function () {
         'tgl_mulai' => now()->addDays(1),
         'tgl_selesai' => now()->addDays(32),
         'tujuan' => 'Magang',
-        'status' => 'pending' // Status bukan diterima
+        'status' => 'pending', // Status bukan diterima
     ]);
 
     Storage::fake('public');
     $file = UploadedFile::fake()->create('laporan.pdf', 1024, 'application/pdf');
 
-    post(route('status.upload', $app->id), ['laporan_akhir' => $file])
+    $this->withSession(['verified_magang_id' => $app->id])
+        ->post(route('status.upload', $app->id), ['laporan_akhir' => $file])
         ->assertForbidden(); // Harusnya 403
 });
 
@@ -116,13 +118,14 @@ test('upload report fails if too early', function () {
         'tgl_mulai' => now()->addDays(1),
         'tgl_selesai' => now()->addDays(30), // Masih lama (30 hari lagi), belum H-7
         'tujuan' => 'Magang',
-        'status' => 'diterima'
+        'status' => 'diterima',
     ]);
 
     Storage::fake('public');
     $file = UploadedFile::fake()->create('laporan.pdf', 1024, 'application/pdf');
 
-    post(route('status.upload', $app->id), ['laporan_akhir' => $file])
+    $this->withSession(['verified_magang_id' => $app->id])
+        ->post(route('status.upload', $app->id), ['laporan_akhir' => $file])
         ->assertSessionHas('error', 'Maaf, periode upload laporan belum dibuka.');
 });
 
@@ -138,13 +141,14 @@ test('upload report succeeds if status is diterima', function () {
         'tgl_mulai' => now()->addDays(1),
         'tgl_selesai' => now()->addDays(5), // Sudah masuk periode H-7 (karena 5 < 7)
         'tujuan' => 'Magang',
-        'status' => 'diterima' // Status Diterima
+        'status' => 'diterima', // Status Diterima
     ]);
 
     Storage::fake('public');
     $file = UploadedFile::fake()->create('laporan.pdf', 1024, 'application/pdf');
 
-    post(route('status.upload', $app->id), ['laporan_akhir' => $file])
+    $this->withSession(['verified_magang_id' => $app->id])
+        ->post(route('status.upload', $app->id), ['laporan_akhir' => $file])
         ->assertRedirect()
         ->assertSessionHas('success');
 

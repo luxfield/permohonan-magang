@@ -64,16 +64,12 @@
               <tr class="hover:bg-slate-50 transition">
                 <td class="px-4 py-3 font-mono text-xs text-slate-500">#{{ $app->id }}</td>
                 <td class="px-4 py-3">
-                  @if($app->status_pengajuan === 'mandiri')
+                  
                     <div class="font-bold text-slate-900">{{ $app->nama }}</div>
                     <div class="text-xs text-slate-500">{{ $app->email }}</div>
                     <div class="text-xs text-slate-500">{{ $app->no_hp }}</div>
                     <div class="text-[10px] text-slate-400 mt-1">NIK: {{ $app->nik }}</div>
-                  @else
-                    <div class="font-bold text-slate-900">{{ $app->pembimbing }}</div>
-                    <div class="text-xs text-slate-500">{{ $app->kontak_pembimbing }}</div>
-                    <div class="text-[10px] text-slate-400 mt-1">Pembimbing</div>
-                  @endif
+                  
                 </td>
                 <td class="px-4 py-3">
                   @if($app->status_pengajuan === 'mandiri')
@@ -207,7 +203,7 @@
           </div>
         </div>
         <!-- <hr class="border-slate-100"> -->
-        <!-- Update 3 -->
+            <!-- Update 3 -->
         <!-- <div class="flex gap-4">
           <div class="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-sm">3</div>
           <div>
@@ -216,7 +212,7 @@
           </div>
         </div> -->
         <!-- <hr class="border-slate-100"> -->
-        <!-- Update 4 -->
+            <!-- Update 4 -->
         <!-- <div class="flex gap-4">
           <div class="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-sm">4</div>
           <div>

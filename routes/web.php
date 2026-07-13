@@ -1,8 +1,7 @@
 <?php
 
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\SampleRegisterController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MagangRegisterController;
 use App\Http\Controllers\MagangStatusController;
 use Illuminate\Support\Facades\Route;
@@ -11,14 +10,12 @@ Route::get('/', function () {
     if (auth()->check()) {
         return redirect()->route('admin.dashboard');
     }
+
     return view('home');
 })->name('home');
 
 Route::get('/sample-register', [MagangRegisterController::class, 'index'])->name('sample.register.index');
 Route::post('/sample-register', [MagangRegisterController::class, 'store'])->name('sample.register.store')->middleware('throttle:5,1');
-
-// Route tambahan untuk memenuhi kebutuhan Unit Test
-Route::post('/magang', [SampleRegisterController::class, 'store'])->name('test.magang.store');
 
 // Route Cek Status & Upload Laporan (Public)
 Route::get('/cek-status', [MagangStatusController::class, 'index'])->name('status.index');

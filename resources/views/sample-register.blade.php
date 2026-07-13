@@ -326,10 +326,6 @@
   <script>
     // ===== UI Helpers =====
     const $ = (id)=>document.getElementById(id);
-    const getChecked = (name) => {
-        const els = document.querySelectorAll(`input[name="${name}"], input[name="${name}[]"]`);
-        return Array.from(els).filter(e => e.checked).map(e => e.value);
-    };
     const statusPengajuan = $("statusPengajuan");
     const mandiriSection = $("mandiriSection");
     const institusiSection = $("institusiSection");
@@ -351,9 +347,9 @@
       } else if(v === "institusi" || v === "kejuruan"){
         institusiSection.classList.remove("hidden");
         mandiriSection.classList.add("hidden");
-        if(dataPemohonSection) dataPemohonSection.classList.add("hidden");
+        if(dataPemohonSection) dataPemohonSection.classList.remove("hidden");
         requiredIds.forEach(id => $(id).required = true);
-        dataPemohonRequiredIds.forEach(id => { if($(id)) $(id).required = false; });
+        dataPemohonRequiredIds.forEach(id => { if($(id)) $(id).required = true; });
       } else {
         mandiriSection.classList.add("hidden");
         institusiSection.classList.add("hidden");
@@ -408,182 +404,8 @@
       return errs;
     }
 
-    function buildPayload(){
-      const fd = new FormData(form);
-      const status = (fd.get("statusPengajuan") || "").toString();
-
-      const payload = {
-        status,
-        nama: (fd.get("nama") || "").toString(),
-        hp: (fd.get("kontakHp") || "").toString(),
-        email: (fd.get("email") || "").toString(),
-        nik: (fd.get("nik") || "").toString(),
-        tglLahir: (fd.get("tglLahir") || "").toString(),
-        alamat: (fd.get("alamat") || "").toString(),
-        tglMulai: (fd.get("tglMulai") || "").toString(),
-        tglSelesai: (fd.get("tglSelesai") || "").toString(),
-        tujuan: (fd.get("tujuan") || "").toString(),
-        jalur: {}
-      };
-
-      if(status === "mandiri"){
-        payload.jalur = {
-          pendidikanAsal: (fd.get("pendidikanAsal_m") || "").toString(),
-          prodi: (fd.get("prodi_m") || "").toString(),
-          files: {
-            suratPermohonan: fileMeta(fd.get("suratMandiri")),
-            cv: fileMeta(fd.get("cvMandiri")),
-            ktp: fileMeta(fd.get("ktpMandiri")),
-            foto: fileMeta(fd.get("fotoMandiri")),
-          }
-        };
-      } else if(status === "institusi" || status === "kejuruan"){
-        payload.jalur = {
-          institusi: (fd.get("institusi") || "").toString(),
-          fakultas: (fd.get("fakultas") || "").toString(),
-          semester: (fd.get("semester") || "").toString(),
-          pembimbing: (fd.get("pembimbing") || "").toString(),
-          kontakPembimbing: (fd.get("kontakPembimbing") || "").toString(),
-          jumlahPeserta: (fd.get("jumlahPeserta") || "").toString(),
-          files: {
-            suratPengantar: fileMeta(fd.get("suratPengantar")),
-            cv: fileMeta(fd.get("cvInstitusi")),
-            proposal: fileMeta(fd.get("proposal")),
-          }
-        };
-      }
-
-      return payload;
-    }
-
-    function matchSearch(rec, q){
-      if(!q) return true;
-      const hay = [
-        rec.nama, rec.email, rec.hp,
-        rec.jalur?.institusi, rec.jalur?.pendidikanAsal, rec.jalur?.fakultas
-      ].filter(Boolean).join(" ").toLowerCase();
-      return hay.includes(q.toLowerCase());
-    }
-
-    function escapeHtml(s){
-      return s.replace(/[&<>"']/g, m => ({
-        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-      }[m]));
-    }
-
-    function renderList(records){
-      if(!records.length){
-        listWrap.innerHTML = `<div class="text-slate-600">Belum ada data.</div>`;
-        debug.textContent = "{}";
-        return;
-      }
-
-      const sFilter = filterStatus.value;
-      const q = searchText.value.trim();
-
-      const filtered = records
-        .filter(r => !sFilter || r.status === sFilter)
-        .filter(r => matchSearch(r, q));
-
-      if(!filtered.length){
-        listWrap.innerHTML = `<div class="text-slate-600">Tidak ada hasil untuk filter/pencarian saat ini.</div>`;
-        return;
-      }
-
-      debug.textContent = JSON.stringify(filtered[0], null, 2);
-
-      listWrap.innerHTML = filtered.map(r => {
-        const badge = r.status === "mandiri"
-          ? `<span class="text-[11px] font-semibold rounded-full border border-emerald-200 bg-emerald-50 text-emerald-800 px-2.5 py-1">MANDIRI</span>`
-          : r.status === "kejuruan"
-          ? `<span class="text-[11px] font-semibold rounded-full border border-purple-200 bg-purple-50 text-purple-800 px-2.5 py-1">KEJURUAN</span>`
-          : `<span class="text-[11px] font-semibold rounded-full border border-sky-200 bg-sky-50 text-sky-800 px-2.5 py-1">INSTITUSI</span>`;
-
-        const extra = (r.status === "institusi" || r.status === "kejuruan")
-          ? `Institusi: ${r.jalur?.institusi || "-"}`
-          : `Asal: ${r.jalur?.pendidikanAsal || "-"}`;
-
-        return `
-          <div class="mt-3 rounded-2xl border border-slate-200 bg-white p-3">
-            <div class="flex flex-wrap items-start justify-between gap-2">
-              <div>
-                <div class="flex items-center gap-2">
-                  <div class="font-extrabold">#${r.id}</div>
-                  ${badge}
-                </div>
-                <div class="text-[11px] text-slate-500 mt-0.5">${new Date(r.createdAt).toLocaleString("id-ID")}</div>
-              </div>
-              <div class="flex flex-wrap gap-2">
-                <button class="border border-slate-200 bg-white px-3 py-2 rounded-xl font-extrabold text-xs" data-view="${r.id}">Detail</button>
-                <button class="border border-rose-200 bg-white text-rose-700 px-3 py-2 rounded-xl font-extrabold text-xs" data-del="${r.id}">Hapus</button>
-              </div>
-            </div>
-
-            <div class="mt-2">
-              <div class="font-bold">${r.nama} <span class="font-normal text-slate-600">— ${r.email}</span></div>
-              <div class="text-xs text-slate-500 mt-1">${extra}</div>
-            </div>
-
-            <div id="detail-${r.id}" class="hidden mt-3">
-              <details open class="rounded-2xl border border-slate-200 bg-white p-3">
-                <summary class="cursor-pointer font-extrabold text-sm">Detail Pengajuan</summary>
-                <pre class="mt-3 rounded-2xl bg-slate-900 text-slate-100 text-xs p-3 overflow-auto">${escapeHtml(JSON.stringify(r, null, 2))}</pre>
-              </details>
-            </div>
-          </div>
-        `;
-      }).join("");
-
-      // bind
-      listWrap.querySelectorAll("button[data-del]").forEach(btn=>{
-        btn.addEventListener("click", async ()=>{
-          const id = Number(btn.getAttribute("data-del"));
-          const ok = confirm(`Hapus data #${id}?`);
-          if(!ok) return;
-          await deleteById(id);
-          await refresh();
-        });
-      });
-
-      listWrap.querySelectorAll("button[data-view]").forEach(btn=>{
-        btn.addEventListener("click", ()=>{
-          const id = btn.getAttribute("data-view");
-          document.getElementById(`detail-${id}`).classList.toggle("hidden");
-        });
-      });
-    }
-
-    async function refresh(){
-      const rows = await listNewest();
-      renderList(rows);
-    }
-
-    function downloadText(filename, content, type="application/json"){
-      const blob = new Blob([content], {type});
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = filename;
-      a.click();
-      URL.revokeObjectURL(a.href);
-    }
-
-    function toCSV(rows){
-      const header = ["id","createdAt","status","nama","hp","email","nik","tglLahir","tglMulai","tglSelesai","institusi_or_asal"];
-      const lines = [header.join(",")];
-      for(const r of rows){
-        const instOrAsal = (r.status === "institusi" || r.status === "kejuruan") ? (r.jalur?.institusi || "") : (r.jalur?.pendidikanAsal || "");
-        const values = [
-          r.id, r.createdAt, r.status, r.nama||"", r.hp||"", r.email||"", r.nik||"", r.tglLahir||"",
-          r.tglMulai||"", r.tglSelesai||"", instOrAsal
-        ].map(x => `"${String(x).replaceAll('"','""')}"`);
-        lines.push(values.join(","));
-      }
-      return lines.join("\n");
-    }
-
     // ===== Events =====
     statusPengajuan.addEventListener("change", ()=>{
-      // hide(msg);
       toggleSections();
     });
 
@@ -602,37 +424,6 @@
         } else {
             tglSelesaiInput.min = '';
         }
-    });
-
-    if($("btnResetForm")) $("btnResetForm").addEventListener("click", ()=>{
-      form.reset();
-      // hide(msg);
-      toggleSections();
-    });
-
-    if($("btnRefresh")) $("btnRefresh").addEventListener("click", refresh);
-    if(typeof filterStatus !== 'undefined') filterStatus.addEventListener("change", refresh);
-
-    if(typeof searchText !== 'undefined') searchText.addEventListener("input", ()=>{
-      clearTimeout(window.__t);
-      window.__t = setTimeout(refresh, 150);
-    });
-
-    if($("btnResetDb")) $("btnResetDb").addEventListener("click", async ()=>{
-      const ok = confirm("Reset DB akan menghapus semua data demo pada browser ini. Lanjutkan?");
-      if(!ok) return;
-      await clearAll();
-      await refresh();
-    });
-
-    if($("btnExportJson")) $("btnExportJson").addEventListener("click", async ()=>{
-      const rows = await listNewest();
-      downloadText("pengajuan-kejari-demo.json", JSON.stringify(rows, null, 2), "application/json");
-    });
-
-    if($("btnExportCsv")) $("btnExportCsv").addEventListener("click", async ()=>{
-      const rows = await listNewest();
-      downloadText("pengajuan-kejari-demo.csv", toCSV(rows), "text/csv");
     });
 
     // ===== File Validation =====
@@ -686,36 +477,8 @@
       }
     });
 
-    // form.addEventListener("submit", async (e)=>{
-    //   e.preventDefault();
-    //   hide(msg);
-    //
-    //   if(!form.checkValidity()){
-    //     form.reportValidity();
-    //     setStatus("err","Mohon lengkapi kolom yang wajib diisi.");
-    //     return;
-    //   }
-    //
-    //   const errs = validateCustom();
-    //   if(errs.length){
-    //     setStatus("err", errs.map((x,i)=>`${i+1}. ${x}`).join("\n"));
-    //     return;
-    //   }
-    //
-    //   const payload = buildPayload();
-    //   const newId = await addRecord(payload);
-    //
-    //   setStatus("ok", `Tersimpan (demo) ke IndexedDB. ID: #${newId}`);
-    //   form.reset();
-    //   toggleSections();
-    //   await refresh();
-    // });
-
     // init
     toggleSections();
-    // refresh();
   </script>
-</body>
-</html>
 </body>
 </html>

@@ -3,8 +3,9 @@
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use function Pest\Laravel\post;
+
 use function Pest\Laravel\get;
+use function Pest\Laravel\post;
 
 uses(RefreshDatabase::class);
 
@@ -19,7 +20,7 @@ test('registration requires main fields', function () {
     post(route('sample.register.store'), [])
         ->assertSessionHasErrors([
             'statusPengajuan', 'nama', 'kontakHp', 'email', 'nik',
-            'tglLahir', 'alamat', 'tglMulai', 'tglSelesai', 'tujuan', 'pernyataan'
+            'tglLahir', 'alamat', 'tglMulai', 'tglSelesai', 'tujuan', 'pernyataan',
         ]);
 });
 
@@ -81,7 +82,7 @@ test('user can register via mandiri path', function () {
     // Pastikan data masuk database
     $this->assertDatabaseHas('magang_applications', [
         'email' => 'budi@example.com',
-        'status_pengajuan' => 'mandiri'
+        'status_pengajuan' => 'mandiri',
     ]);
 });
 
@@ -91,8 +92,8 @@ test('user can register via mandiri path', function () {
 test('institusi registration requires specific fields', function () {
     post(route('sample.register.store'), ['statusPengajuan' => 'institusi'])
         ->assertSessionHasErrors([
-            'institusi', 'nim', 'fakultas', 'semester',
-            'suratPengantar', 'transkrip', 'fotoInstitusi'
+            'institusi', 'fakultas', 'semester', 'pembimbing', 'kontakPembimbing',
+            'jumlahPeserta', 'suratPengantar', 'nama', 'kontakHp', 'email', 'nik', 'tglLahir', 'alamat',
         ]);
 });
 
@@ -131,6 +132,6 @@ test('user can register via institusi path', function () {
     $this->assertDatabaseHas('magang_applications', [
         'email' => 'siti@example.com',
         'status_pengajuan' => 'institusi',
-        'nim' => '12345/HK'
+        'nim' => '12345/HK',
     ]);
 });
