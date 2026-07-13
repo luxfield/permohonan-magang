@@ -305,7 +305,7 @@
               </label>
               <div class="flex flex-col items-center gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
                 <a href="https://reformasibirokrasi.kejaksaan.go.id/skm/1bbc9074ef525573e762c040a85b982f1ddb7faab375e1e7256b45b4ab55f613c22691c6b0339213adbaabaa036a9b68f7f6d22f9716c7d7a13aa6747e1aad01XxRlMkG6QsSE~9minl.PsAQXg6VABHTYJA--" target="_blank" class="block hover:opacity-90 transition group text-center">
-                  <img src="{{ asset('images/download_layanan_ptsp.png') }}" alt="QR Survey Layanan PTSP" class="w-40 h-40 mx-auto rounded-xl border border-slate-200 bg-white p-1 shadow-sm group-hover:border-emerald-500 transition" />
+                  <img src="{{ asset('storage/documents/download_layanan_ptsp.png') }}" alt="QR Survey Layanan PTSP" class="w-40 h-40 mx-auto rounded-xl border border-slate-200 bg-white p-1 shadow-sm group-hover:border-emerald-500 transition" />
                   <span class="text-[11px] text-emerald-700 font-bold block mt-2 hover:underline">atau klik disini untuk survey layanan</span>
                 </a>
               </div>
