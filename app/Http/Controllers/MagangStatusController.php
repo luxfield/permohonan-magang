@@ -23,7 +23,7 @@ class MagangStatusController extends Controller
 
         $intern_user = Intern::where(function ($query) use ($request) {
             $query->Where('nim', $request->identifier);
-        })->where('tgl_lahir', $request->tgl_lahir)->orderBy('id', 'desc')->first();
+        })->whereDate('tgl_lahir', $request->tgl_lahir)->orderBy('id', 'desc')->first();
 
         if (! $intern_user) {
             // Cari data berdasarkan (NIK atau NIM) DAN Tanggal Lahir
@@ -31,7 +31,7 @@ class MagangStatusController extends Controller
                 $query->where('nik', $request->identifier)
                     ->orWhere('nim', $request->identifier);
             })
-                ->where('tgl_lahir', $request->tgl_lahir)
+                ->whereDate('tgl_lahir', $request->tgl_lahir)
                 ->orderBy('id', 'desc')
                 ->first();
 
@@ -56,7 +56,7 @@ class MagangStatusController extends Controller
         }
 
         // Tampilkan halaman detail status
-        return view('status.show', compact('application','intern_user'));
+        return view('status.show', compact('application', 'intern_user'));
     }
 
     public function uploadForm($id)
@@ -130,7 +130,7 @@ class MagangStatusController extends Controller
         }
 
         $query = \App\Models\MagangKinerja::where('magang_application_id', $id);
-        
+
         if (session()->has('verified_intern_id')) {
             $query->where('intern_id', session('verified_intern_id'));
         }

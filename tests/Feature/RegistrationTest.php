@@ -175,5 +175,5 @@ test('registration fails if nik is already registered', function () {
     ];
 
     post(route('sample.register.store'), $data)
-        ->assertSessionHasErrors(['nik' => 'NIK ini sudah terdaftar.']);
+        ->assertSessionHasErrors(['nik' => 'NIM / KTP sudah terdaftar silahkan cek ke menu "cek status magang" untuk melihat progressnya']);
 });

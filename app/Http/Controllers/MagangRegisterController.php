@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Intern;
 use App\Models\MagangApplication;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class MagangRegisterController extends Controller
@@ -12,7 +14,7 @@ class MagangRegisterController extends Controller
         return view('sample-register');
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         // 1. Aturan Validasi Dasar (Berlaku untuk semua)
         $rules = [
@@ -20,7 +22,19 @@ class MagangRegisterController extends Controller
             'nama' => 'required|string|max:255',
             'kontakHp' => 'required|string|max:20',
             'email' => 'required|email|max:255',
-            'nik' => 'required|numeric|unique:magang_applications,nik',
+            'nik' => [
+                'required',
+                'numeric',
+                function ($attribute, $value, $fail) {
+                    $existsInApp = MagangApplication::where('nik', $value)
+                        ->orWhere('nim', $value)
+                        ->exists();
+                    $existsInIntern = Intern::where('nim', $value)->exists();
+                    if ($existsInApp || $existsInIntern) {
+                        $fail('NIM / KTP sudah terdaftar silahkan cek ke menu "cek status magang" untuk melihat progressnya');
+                    }
+                },
+            ],
             'tglLahir' => 'required|date|before_or_equal:-17 years',
             'alamat' => 'required|string',
             'tglMulai' => 'required|date|after_or_equal:today',
@@ -80,7 +94,6 @@ class MagangRegisterController extends Controller
             'captcha.captcha' => 'Kode captcha tidak sesuai.',
             'buktiSurvey.required' => 'Bukti survey wajib diunggah.',
             'buktiSurvey.max' => 'Ukuran file bukti survey maksimal 5MB.',
-            'nik.unique' => 'NIK ini sudah terdaftar.',
         ];
 
         $validated = $request->validate($rules, $messages);

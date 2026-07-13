@@ -122,4 +122,44 @@ class MagangApplicationTest extends TestCase
             'statusPengajuan', 'nama', 'email', 'nik', 'kontakHp', 'tglLahir', 'buktiSurvey',
         ]);
     }
+
+    public function test_validasi_gagal_jika_nik_atau_nim_sudah_terdaftar()
+    {
+        Storage::fake('public');
+
+        // Create an existing application
+        \App\Models\MagangApplication::factory()->create([
+            'nik' => '1234567890123456',
+        ]);
+
+        $fileSurvey = UploadedFile::fake()->create('survey.png', 1000, 'image/png');
+        $fileSurat = UploadedFile::fake()->create('surat.pdf', 1000, 'application/pdf');
+        $fileKtp = UploadedFile::fake()->create('ktp.jpg', 1000, 'image/jpeg');
+        $fileFoto = UploadedFile::fake()->create('foto.jpg', 1000, 'image/jpeg');
+
+        // Try to register with the same NIK
+        $response = $this->post(route('sample.register.store'), [
+            'statusPengajuan' => 'mandiri',
+            'nama' => 'Budi Santoso Baru',
+            'kontakHp' => '081234567890',
+            'email' => 'budibaru@example.com',
+            'nik' => '1234567890123456',
+            'tglLahir' => '2000-01-01',
+            'alamat' => 'Jl. Merdeka No. 1',
+            'tglMulai' => now()->addDay()->format('Y-m-d'),
+            'tglSelesai' => now()->addMonths(2)->format('Y-m-d'),
+            'tujuan' => 'Mencari pengalaman',
+            'pernyataan' => 'on',
+            'buktiSurvey' => $fileSurvey,
+            'pendidikanAsal_m' => 'Universitas Indonesia',
+            'prodi_m' => 'Hukum',
+            'suratMandiri' => $fileSurat,
+            'ktpMandiri' => $fileKtp,
+            'fotoMandiri' => $fileFoto,
+        ]);
+
+        $response->assertSessionHasErrors([
+            'nik' => 'NIM / KTP sudah terdaftar silahkan cek ke menu "cek status magang" untuk melihat progressnya',
+        ]);
+    }
 }

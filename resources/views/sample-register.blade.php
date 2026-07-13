@@ -119,7 +119,11 @@
               <div>
                 <label for="nik" class="text-xs font-bold">NIK / NIS / NIM <span class="text-rose-700">*</span></label>
                 <input id="nik" name="nik" required inputmode="numeric" placeholder="Nomor Induk Kependudukan / Nomor Induk Siswa / Nomor Induk Mahasiwa"
-                       class="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-200 focus:border-emerald-500" />
+                       value="{{ old('nik') }}"
+                       class="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-200 focus:border-emerald-500 @error('nik') border-rose-500 focus:ring-rose-200 focus:border-rose-500 @enderror" />
+                @error('nik')
+                    <p class="text-[11px] text-rose-700 mt-1 font-semibold">{{ $message }}</p>
+                @enderror
               </div>
             </div>
 
