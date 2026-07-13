@@ -22,6 +22,7 @@ class MagangApplicationTest extends TestCase
         $fileSurat = UploadedFile::fake()->create('surat.pdf', 1000, 'application/pdf');
         $fileKtp = UploadedFile::fake()->create('ktp.jpg', 1000, 'image/jpeg');
         $fileFoto = UploadedFile::fake()->create('foto.jpg', 1000, 'image/jpeg');
+        $fileSurvey = UploadedFile::fake()->create('survey.png', 1000, 'image/png');
 
         $response = $this->post(route('sample.register.store'), [
             'statusPengajuan' => 'mandiri',
@@ -36,6 +37,7 @@ class MagangApplicationTest extends TestCase
             'bidang' => ['Pidum', 'Pidsus'],
             'tujuan' => 'Mencari pengalaman',
             'pernyataan' => 'on',
+            'buktiSurvey' => $fileSurvey,
 
             // Field Khusus Mandiri
             'pendidikanAsal_m' => 'Universitas Indonesia',
@@ -62,6 +64,7 @@ class MagangApplicationTest extends TestCase
         Storage::disk('public')->assertExists('uploads/surat/'.$fileSurat->hashName());
         Storage::disk('public')->assertExists('uploads/ktp/'.$fileKtp->hashName());
         Storage::disk('public')->assertExists('uploads/foto/'.$fileFoto->hashName());
+        Storage::disk('public')->assertExists('uploads/bukti_survey/'.$fileSurvey->hashName());
     }
 
     public function test_pengajuan_magang_institusi_berhasil_disimpan()
@@ -71,6 +74,7 @@ class MagangApplicationTest extends TestCase
         $fileSurat = UploadedFile::fake()->create('surat.pdf', 1000, 'application/pdf');
         $fileTranskrip = UploadedFile::fake()->create('transkrip.pdf', 1000, 'application/pdf');
         $fileFoto = UploadedFile::fake()->create('foto.jpg', 1000, 'image/jpeg');
+        $fileSurvey = UploadedFile::fake()->create('survey.png', 1000, 'image/png');
 
         $response = $this->post(route('sample.register.store'), [
             'statusPengajuan' => 'institusi',
@@ -85,6 +89,7 @@ class MagangApplicationTest extends TestCase
             'bidang' => ['Datun'],
             'tujuan' => 'PKL Kampus',
             'pernyataan' => 'on',
+            'buktiSurvey' => $fileSurvey,
 
             // Field Khusus Institusi
             'institusi' => 'UNPAD',
@@ -114,7 +119,7 @@ class MagangApplicationTest extends TestCase
         $response = $this->post(route('sample.register.store'), []);
 
         $response->assertSessionHasErrors([
-            'statusPengajuan', 'nama', 'email', 'nik', 'kontakHp', 'tglLahir',
+            'statusPengajuan', 'nama', 'email', 'nik', 'kontakHp', 'tglLahir', 'buktiSurvey',
         ]);
     }
 }

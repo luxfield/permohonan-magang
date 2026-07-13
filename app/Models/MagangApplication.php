@@ -41,7 +41,8 @@ class MagangApplication extends Model
         'proposal_path',
         'status',
         'catatan_admin',
-        'laporan_akhir_path'
+        'laporan_akhir_path',
+        'bukti_survey_path',
     ];
 
     protected $casts = [

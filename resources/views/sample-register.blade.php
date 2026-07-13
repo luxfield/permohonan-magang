@@ -294,6 +294,28 @@
               </span>
             </label>
 
+            <!-- Survey Layanan PTSP Section -->
+            <div class="mt-4 p-4 bg-white border border-slate-200 rounded-2xl max-w-md">
+              <label class="text-xs font-bold block mb-2">
+                Survey Layanan PTSP <span class="text-rose-700">*</span>
+              </label>
+              <div class="flex flex-col items-center gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <a href="https://reformasibirokrasi.kejaksaan.go.id/skm/1bbc9074ef525573e762c040a85b982f1ddb7faab375e1e7256b45b4ab55f613c22691c6b0339213adbaabaa036a9b68f7f6d22f9716c7d7a13aa6747e1aad01XxRlMkG6QsSE~9minl.PsAQXg6VABHTYJA--" target="_blank" class="block hover:opacity-90 transition group text-center">
+                  <img src="{{ asset('images/download_layanan_ptsp.png') }}" alt="QR Survey Layanan PTSP" class="w-40 h-40 mx-auto rounded-xl border border-slate-200 bg-white p-1 shadow-sm group-hover:border-emerald-500 transition" />
+                  <span class="text-[11px] text-emerald-700 font-bold block mt-2 hover:underline">atau klik disini untuk survey layanan</span>
+                </a>
+              </div>
+              <div class="mt-3">
+                <label for="buktiSurvey" class="text-xs font-bold block mb-1">Upload Bukti Pengisian Survey (PDF/JPG/PNG) <span class="text-rose-700">*</span></label>
+                <input id="buktiSurvey" name="buktiSurvey" type="file" accept=".pdf,.jpg,.jpeg,.png" required
+                       class="w-full text-sm file:mr-3 file:rounded-xl file:border-0 file:bg-slate-900/5 file:px-3 file:py-2 file:font-bold file:text-slate-900 @error('buktiSurvey') text-rose-600 @enderror" />
+                @error('buktiSurvey')
+                    <p class="text-[11px] text-rose-700 mt-1 font-semibold">{{ $message }}</p>
+                @enderror
+                <p class="text-[11px] text-slate-500 mt-1">Silakan unggah screenshot atau file tanda bukti pengisian survey.</p>
+              </div>
+            </div>
+
             <!-- Captcha Section -->
             <div class="mt-4 p-4 bg-white border border-slate-200 rounded-2xl max-w-sm">
               <label for="captcha" class="text-xs font-bold block mb-2">

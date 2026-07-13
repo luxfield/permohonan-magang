@@ -20,7 +20,7 @@ class MagangRegisterController extends Controller
             'nama' => 'required|string|max:255',
             'kontakHp' => 'required|string|max:20',
             'email' => 'required|email|max:255',
-            'nik' => 'required|numeric',
+            'nik' => 'required|numeric|unique:magang_applications,nik',
             'tglLahir' => 'required|date|before_or_equal:-17 years',
             'alamat' => 'required|string',
             'tglMulai' => 'required|date|after_or_equal:today',
@@ -36,6 +36,7 @@ class MagangRegisterController extends Controller
             ],
             'tujuan' => 'required|string',
             'pernyataan' => 'accepted',
+            'buktiSurvey' => 'required|file|mimes:pdf,jpg,jpeg,png|max:10240',
         ];
 
         if (! config('captcha.disable')) {
@@ -77,6 +78,9 @@ class MagangRegisterController extends Controller
             'proposal.max' => 'Ukuran file Proposal maksimal 10MB.',
             'captcha.required' => 'Kode captcha wajib diisi.',
             'captcha.captcha' => 'Kode captcha tidak sesuai.',
+            'buktiSurvey.required' => 'Bukti survey wajib diunggah.',
+            'buktiSurvey.max' => 'Ukuran file bukti survey maksimal 10MB.',
+            'nik.unique' => 'NIK ini sudah terdaftar.',
         ];
 
         $validated = $request->validate($rules, $messages);
@@ -94,6 +98,10 @@ class MagangRegisterController extends Controller
             'tgl_selesai' => $request->tglSelesai,
             'tujuan' => $request->tujuan,
         ];
+
+        if ($request->hasFile('buktiSurvey')) {
+            $data['bukti_survey_path'] = $request->file('buktiSurvey')->store('uploads/bukti_survey', 'public');
+        }
 
         if ($request->statusPengajuan === 'mandiri') {
             $data['pendidikan_asal'] = $request->pendidikanAsal_m;

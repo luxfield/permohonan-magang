@@ -20,7 +20,7 @@ test('registration requires main fields', function () {
     post(route('sample.register.store'), [])
         ->assertSessionHasErrors([
             'statusPengajuan', 'nama', 'kontakHp', 'email', 'nik',
-            'tglLahir', 'alamat', 'tglMulai', 'tglSelesai', 'tujuan', 'pernyataan',
+            'tglLahir', 'alamat', 'tglMulai', 'tglSelesai', 'tujuan', 'pernyataan', 'buktiSurvey',
         ]);
 });
 
@@ -72,6 +72,7 @@ test('user can register via mandiri path', function () {
         'suratMandiri' => UploadedFile::fake()->create('surat.pdf', 500, 'application/pdf'),
         'ktpMandiri' => UploadedFile::fake()->create('ktp.jpg', 500, 'image/jpeg'),
         'fotoMandiri' => UploadedFile::fake()->create('foto.jpg', 500, 'image/jpeg'),
+        'buktiSurvey' => UploadedFile::fake()->create('survey.png', 500, 'image/png'),
     ];
 
     post(route('sample.register.store'), $data)
@@ -93,7 +94,7 @@ test('institusi registration requires specific fields', function () {
     post(route('sample.register.store'), ['statusPengajuan' => 'institusi'])
         ->assertSessionHasErrors([
             'institusi', 'fakultas', 'semester', 'pembimbing', 'kontakPembimbing',
-            'jumlahPeserta', 'suratPengantar', 'nama', 'kontakHp', 'email', 'nik', 'tglLahir', 'alamat',
+            'jumlahPeserta', 'suratPengantar', 'nama', 'kontakHp', 'email', 'nik', 'tglLahir', 'alamat', 'buktiSurvey',
         ]);
 });
 
@@ -123,6 +124,7 @@ test('user can register via institusi path', function () {
         'transkrip' => UploadedFile::fake()->create('transkrip.pdf', 500, 'application/pdf'),
         'fotoInstitusi' => UploadedFile::fake()->create('foto.jpg', 500, 'image/jpeg'),
         'proposal' => UploadedFile::fake()->create('proposal.pdf', 500, 'application/pdf'),
+        'buktiSurvey' => UploadedFile::fake()->create('survey.png', 500, 'image/png'),
     ];
 
     post(route('sample.register.store'), $data)
@@ -134,4 +136,44 @@ test('user can register via institusi path', function () {
         'status_pengajuan' => 'institusi',
         'nim' => '12345/HK',
     ]);
+});
+
+test('registration fails if nik is already registered', function () {
+    \App\Models\MagangApplication::create([
+        'status_pengajuan' => 'mandiri',
+        'nama' => 'Budi Santoso',
+        'no_hp' => '081234567890',
+        'email' => 'budi@example.com',
+        'nik' => '3201010101000001',
+        'tgl_lahir' => '2000-01-01',
+        'alamat' => 'Jl. Merdeka No. 1',
+        'tgl_mulai' => now()->addDays(7)->format('Y-m-d'),
+        'tgl_selesai' => now()->addDays(40)->format('Y-m-d'),
+        'tujuan' => 'Magang',
+    ]);
+
+    Storage::fake('public');
+
+    $data = [
+        'statusPengajuan' => 'mandiri',
+        'nama' => 'Jane Doe',
+        'kontakHp' => '081234567891',
+        'email' => 'jane@example.com',
+        'nik' => '3201010101000001', // Duplicate NIK
+        'tglLahir' => '2000-01-01',
+        'alamat' => 'Jl. Merdeka No. 2',
+        'tglMulai' => now()->addDays(7)->format('Y-m-d'),
+        'tglSelesai' => now()->addDays(40)->format('Y-m-d'),
+        'tujuan' => 'Magang Mandiri',
+        'pendidikanAsal_m' => 'Univ Indonesia',
+        'prodi_m' => 'Hukum',
+        'pernyataan' => 'on',
+        'suratMandiri' => UploadedFile::fake()->create('surat.pdf', 500, 'application/pdf'),
+        'ktpMandiri' => UploadedFile::fake()->create('ktp.jpg', 500, 'image/jpeg'),
+        'fotoMandiri' => UploadedFile::fake()->create('foto.jpg', 500, 'image/jpeg'),
+        'buktiSurvey' => UploadedFile::fake()->create('survey.png', 500, 'image/png'),
+    ];
+
+    post(route('sample.register.store'), $data)
+        ->assertSessionHasErrors(['nik' => 'NIK ini sudah terdaftar.']);
 });

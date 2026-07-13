@@ -340,6 +340,11 @@
                     if($application->transkrip_path) $files['Transkrip Nilai'] = ['type' => 'pdf', 'path' => $application->transkrip_path];
                     if($application->proposal_path) $files['Proposal'] = ['type' => 'pdf', 'path' => $application->proposal_path];
                 }
+
+                if($application->bukti_survey_path) {
+                    $isPdf = str_ends_with(strtolower($application->bukti_survey_path), '.pdf');
+                    $files['Bukti Survey Layanan PTSP'] = ['type' => $isPdf ? 'pdf' : 'image', 'path' => $application->bukti_survey_path];
+                }
             @endphp
 
             @if(empty($files))
