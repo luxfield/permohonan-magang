@@ -4,8 +4,8 @@ use Illuminate\Http\UploadedFile;
 
 use function Pest\Laravel\post;
 
-it('validates suratMandiri size is not larger than 10MB', function () {
-    $file = UploadedFile::fake()->create('surat.pdf', 10241); // 10241 KB = >10MB
+it('validates suratMandiri size is not larger than 5MB', function () {
+    $file = UploadedFile::fake()->create('surat.pdf', 5121); // 5121 KB = >5MB
 
     $response = post(route('sample.register.store'), [
         'statusPengajuan' => 'mandiri',
@@ -22,12 +22,12 @@ it('validates suratMandiri size is not larger than 10MB', function () {
         'suratMandiri' => $file,
     ]);
 
-    $response->assertSessionHasErrors(['suratMandiri' => 'Ukuran file Surat Permohonan maksimal 10MB.']);
+    $response->assertSessionHasErrors(['suratMandiri' => 'Ukuran file Surat Permohonan maksimal 5MB.']);
 });
 
-it('validates ktpMandiri and fotoMandiri sizes are not larger than 10MB', function () {
-    $ktp = UploadedFile::fake()->create('ktp.jpg', 10241);
-    $foto = UploadedFile::fake()->create('foto.jpg', 10241);
+it('validates ktpMandiri and fotoMandiri sizes are not larger than 5MB', function () {
+    $ktp = UploadedFile::fake()->create('ktp.jpg', 5121);
+    $foto = UploadedFile::fake()->create('foto.jpg', 5121);
 
     $response = post(route('sample.register.store'), [
         'statusPengajuan' => 'mandiri',
@@ -46,14 +46,14 @@ it('validates ktpMandiri and fotoMandiri sizes are not larger than 10MB', functi
     ]);
 
     $response->assertSessionHasErrors([
-        'ktpMandiri' => 'Ukuran file KTP maksimal 10MB.',
-        'fotoMandiri' => 'Ukuran file Pas Foto maksimal 10MB.',
+        'ktpMandiri' => 'Ukuran file KTP maksimal 5MB.',
+        'fotoMandiri' => 'Ukuran file Pas Foto maksimal 5MB.',
     ]);
 });
 
-it('validates institusi file uploads sizes are not larger than 10MB', function () {
-    $suratPengantar = UploadedFile::fake()->create('surat_pengantar.pdf', 10241);
-    $proposal = UploadedFile::fake()->create('proposal.pdf', 10241);
+it('validates institusi file uploads sizes are not larger than 5MB', function () {
+    $suratPengantar = UploadedFile::fake()->create('surat_pengantar.pdf', 5121);
+    $proposal = UploadedFile::fake()->create('proposal.pdf', 5121);
 
     $response = post(route('sample.register.store'), [
         'statusPengajuan' => 'institusi',
@@ -72,8 +72,8 @@ it('validates institusi file uploads sizes are not larger than 10MB', function (
     ]);
 
     $response->assertSessionHasErrors([
-        'suratPengantar' => 'Ukuran file Surat Pengantar maksimal 10MB.',
-        'proposal' => 'Ukuran file Proposal maksimal 10MB.',
+        'suratPengantar' => 'Ukuran file Surat Pengantar maksimal 5MB.',
+        'proposal' => 'Ukuran file Proposal maksimal 5MB.',
     ]);
 });
 

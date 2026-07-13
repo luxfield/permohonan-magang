@@ -185,7 +185,7 @@
 
             <div class="mt-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
               <div>
-                <label for="suratMandiri" class="text-xs font-bold">Surat Permohonan (PDF)</label>
+                <label for="suratMandiri" class="text-xs font-bold">Surat Permohonan (PDF) <span class="text-slate-500 font-normal">(Maks. 5MB)</span></label>
                 <input id="suratMandiri" name="suratMandiri" type="file" accept=".pdf"
                        class="mt-1 w-full text-sm file:mr-3 file:rounded-xl file:border-0 file:bg-slate-900/5 file:px-3 file:py-2 file:font-bold file:text-slate-900 @error('suratMandiri') text-rose-600 @enderror" />
                 @error('suratMandiri')
@@ -193,7 +193,7 @@
                 @enderror
               </div>
               <div>
-                <label for="ktpMandiri" class="text-xs font-bold">KTP / NIS / NIM (JPG/PNG/PDF)</label>
+                <label for="ktpMandiri" class="text-xs font-bold">KTP / NIS / NIM (JPG/PNG/PDF) <span class="text-slate-500 font-normal">(Maks. 5MB)</span></label>
                 <input id="ktpMandiri" name="ktpMandiri" type="file" accept=".jpg,.jpeg,.png,.pdf"
                        class="mt-1 w-full text-sm file:mr-3 file:rounded-xl file:border-0 file:bg-slate-900/5 file:px-3 file:py-2 file:font-bold file:text-slate-900 @error('ktpMandiri') text-rose-600 @enderror" />
                 @error('ktpMandiri')
@@ -201,7 +201,7 @@
                 @enderror
               </div>
               <div>
-                <label for="fotoMandiri" class="text-xs font-bold">Pas Foto (JPG/PNG)</label>
+                <label for="fotoMandiri" class="text-xs font-bold">Pas Foto (JPG/PNG) <span class="text-slate-500 font-normal">(Maks. 5MB)</span></label>
                 <input id="fotoMandiri" name="fotoMandiri" type="file" accept=".jpg,.jpeg,.png"
                        class="mt-1 w-full text-sm file:mr-3 file:rounded-xl file:border-0 file:bg-slate-900/5 file:px-3 file:py-2 file:font-bold file:text-slate-900 @error('fotoMandiri') text-rose-600 @enderror" />
                 @error('fotoMandiri')
@@ -270,7 +270,7 @@
 
             <div class="mt-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
               <div>
-                <label for="suratPengantar" class="text-xs font-bold">Surat Pengantar (PDF)</label>
+                <label for="suratPengantar" class="text-xs font-bold">Surat Pengantar (PDF) <span class="text-slate-500 font-normal">(Maks. 5MB)</span></label>
                 <input id="suratPengantar" name="suratPengantar" type="file" accept=".pdf"
                        class="mt-1 w-full text-sm file:mr-3 file:rounded-xl file:border-0 file:bg-slate-900/5 file:px-3 file:py-2 file:font-bold file:text-slate-900 @error('suratPengantar') text-rose-600 @enderror" />
                 @error('suratPengantar')
@@ -278,7 +278,7 @@
                 @enderror
               </div>
               <div>
-                <label for="proposal" class="text-xs font-bold">Proposal (opsional)</label>
+                <label for="proposal" class="text-xs font-bold">Proposal (opsional) <span class="text-slate-500 font-normal">(Maks. 5MB)</span></label>
                 <input id="proposal" name="proposal" type="file" accept=".pdf"
                        class="mt-1 w-full text-sm file:mr-3 file:rounded-xl file:border-0 file:bg-slate-900/5 file:px-3 file:py-2 file:font-bold file:text-slate-900 @error('proposal') text-rose-600 @enderror" />
                 @error('proposal')
@@ -310,13 +310,13 @@
                 </a>
               </div>
               <div class="mt-3">
-                <label for="buktiSurvey" class="text-xs font-bold block mb-1">Upload Bukti Pengisian Survey (PDF/JPG/PNG) <span class="text-rose-700">*</span></label>
+                <label for="buktiSurvey" class="text-xs font-bold block mb-1">Upload Bukti Pengisian Survey (PDF/JPG/PNG) <span class="text-rose-700">*</span> <span class="text-slate-500 font-normal text-[11px]">(Maks. 5MB)</span></label>
                 <input id="buktiSurvey" name="buktiSurvey" type="file" accept=".pdf,.jpg,.jpeg,.png" required
                        class="w-full text-sm file:mr-3 file:rounded-xl file:border-0 file:bg-slate-900/5 file:px-3 file:py-2 file:font-bold file:text-slate-900 @error('buktiSurvey') text-rose-600 @enderror" />
                 @error('buktiSurvey')
                     <p class="text-[11px] text-rose-700 mt-1 font-semibold">{{ $message }}</p>
                 @enderror
-                <p class="text-[11px] text-slate-500 mt-1">Silakan unggah screenshot atau file tanda bukti pengisian survey.</p>
+                <p class="text-[11px] text-slate-500 mt-1">Silakan unggah screenshot atau file tanda bukti pengisian survey (Maks. 5MB).</p>
               </div>
             </div>
 

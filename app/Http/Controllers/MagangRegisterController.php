@@ -63,10 +63,10 @@ class MagangRegisterController extends Controller
                 'pendidikanAsal_m' => 'nullable|string|max:255',
                 'prodi_m' => 'nullable|string|max:255',
 
-                // Validasi File Mandiri (Max 10MB = 10240 KB)
-                'suratMandiri' => 'required|file|mimes:pdf|max:10240',
-                'ktpMandiri' => 'required|file|mimes:jpg,jpeg,png,pdf|max:10240',
-                'fotoMandiri' => 'required|file|mimes:jpg,jpeg,png|max:10240',
+                // Validasi File Mandiri (Max 5MB = 5120 KB)
+                'suratMandiri' => 'required|file|mimes:pdf|max:5120',
+                'ktpMandiri' => 'required|file|mimes:jpg,jpeg,png,pdf|max:5120',
+                'fotoMandiri' => 'required|file|mimes:jpg,jpeg,png|max:5120',
             ]);
         } elseif ($request->statusPengajuan === 'institusi' || $request->statusPengajuan === 'kejuruan') {
             $rules = array_merge($rules, [
@@ -77,19 +77,19 @@ class MagangRegisterController extends Controller
                 'kontakPembimbing' => 'required|string|max:255',
                 'jumlahPeserta' => 'required|string',
 
-                // Validasi File Institusi (Max 10MB = 10240 KB)
-                'suratPengantar' => 'required|file|mimes:pdf|max:10240',
-                'proposal' => 'nullable|file|mimes:pdf|max:10240',
+                // Validasi File Institusi (Max 5MB = 5120 KB)
+                'suratPengantar' => 'required|file|mimes:pdf|max:5120',
+                'proposal' => 'nullable|file|mimes:pdf|max:5120',
             ]);
         }
 
         // 3. Jalankan Validasi
         $messages = [
-            'suratMandiri.max' => 'Ukuran file Surat Permohonan maksimal 10MB.',
-            'ktpMandiri.max' => 'Ukuran file KTP maksimal 10MB.',
-            'fotoMandiri.max' => 'Ukuran file Pas Foto maksimal 10MB.',
-            'suratPengantar.max' => 'Ukuran file Surat Pengantar maksimal 10MB.',
-            'proposal.max' => 'Ukuran file Proposal maksimal 10MB.',
+            'suratMandiri.max' => 'Ukuran file Surat Permohonan maksimal 5MB.',
+            'ktpMandiri.max' => 'Ukuran file KTP maksimal 5MB.',
+            'fotoMandiri.max' => 'Ukuran file Pas Foto maksimal 5MB.',
+            'suratPengantar.max' => 'Ukuran file Surat Pengantar maksimal 5MB.',
+            'proposal.max' => 'Ukuran file Proposal maksimal 5MB.',
             'captcha.required' => 'Kode captcha wajib diisi.',
             'captcha.captcha' => 'Kode captcha tidak sesuai.',
             'buktiSurvey.required' => 'Bukti survey wajib diunggah.',

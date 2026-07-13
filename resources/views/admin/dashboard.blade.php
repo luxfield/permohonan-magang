@@ -52,7 +52,6 @@
             <tr>
               <th class="px-4 py-3 w-16">ID</th>
               <th class="px-4 py-3">Nama & Kontak</th>
-              <th class="px-4 py-3">NIM / NIS</th>
               <th class="px-4 py-3">Jalur & Institusi</th>
               <th class="px-4 py-3">Bidang & Waktu</th>
               <th class="px-4 py-3">Berkas Pengajuan</th>
@@ -70,11 +69,8 @@
                     <div class="font-bold text-slate-900">{{ $app->nama }}</div>
                     <div class="text-xs text-slate-500">{{ $app->email }}</div>
                     <div class="text-xs text-slate-500">{{ $app->no_hp }}</div>
-                    <div class="text-[10px] text-slate-400 mt-1">NIK: {{ $app->nik }}</div>
+                    <div class="text-[10px] text-slate-400 mt-1">NIK/NIM/NIS: {{ $app->nik }}</div>
                   
-                </td>
-                <td class="px-4 py-3 font-mono text-xs text-slate-600">
-                  {{ $app->nim ?: '-' }}
                 </td>
                 <td class="px-4 py-3">
                   @if($app->status_pengajuan === 'mandiri')
@@ -167,7 +163,7 @@
               </tr>
             @empty
               <tr>
-                <td colspan="9" class="px-4 py-8 text-center text-slate-500">
+                <td colspan="8" class="px-4 py-8 text-center text-slate-500">
                   Belum ada data pengajuan yang masuk.
                 </td>
               </tr>
