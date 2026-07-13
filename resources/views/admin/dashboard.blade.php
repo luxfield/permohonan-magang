@@ -52,10 +52,12 @@
             <tr>
               <th class="px-4 py-3 w-16">ID</th>
               <th class="px-4 py-3">Nama & Kontak</th>
+              <th class="px-4 py-3">NIM / NIS</th>
               <th class="px-4 py-3">Jalur & Institusi</th>
               <th class="px-4 py-3">Bidang & Waktu</th>
               <th class="px-4 py-3">Berkas Pengajuan</th>
               <th class="px-4 py-3">Berkas Makalah</th>
+              <th class="px-4 py-3 text-center">Status</th>
               <th class="px-4 py-3 text-center">Aksi</th>
             </tr>
           </thead>
@@ -70,6 +72,9 @@
                     <div class="text-xs text-slate-500">{{ $app->no_hp }}</div>
                     <div class="text-[10px] text-slate-400 mt-1">NIK: {{ $app->nik }}</div>
                   
+                </td>
+                <td class="px-4 py-3 font-mono text-xs text-slate-600">
+                  {{ $app->nim ?: '-' }}
                 </td>
                 <td class="px-4 py-3">
                   @if($app->status_pengajuan === 'mandiri')
@@ -138,6 +143,15 @@
                     @endforeach
                   </div>
                 </td>
+                <td class="px-4 py-3 text-center">
+                  @if($app->status === 'diterima')
+                    <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-green-800 border border-green-200">DITERIMA</span>
+                  @elseif($app->status === 'ditolak')
+                    <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-100 text-red-800 border border-red-200">DITOLAK</span>
+                  @else
+                    <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-yellow-100 text-yellow-800 border border-yellow-200">PENDING</span>
+                  @endif
+                </td>
                 <td class="px-4 py-3 text-right">
                     <form action="{{ route('admin.destroy', $app->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?');">
                         @csrf
@@ -153,7 +167,7 @@
               </tr>
             @empty
               <tr>
-                <td colspan="6" class="px-4 py-8 text-center text-slate-500">
+                <td colspan="9" class="px-4 py-8 text-center text-slate-500">
                   Belum ada data pengajuan yang masuk.
                 </td>
               </tr>
