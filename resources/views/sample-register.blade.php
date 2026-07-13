@@ -452,10 +452,12 @@
     function validateFile(input) {
       if (!input.files || !input.files[0]) return;
       const file = input.files[0];
-      const maxSize = 10 * 1024 * 1024; // 10MB
+      const isSurvey = input.id === "buktiSurvey";
+      const maxSize = isSurvey ? 5 * 1024 * 1024 : 10 * 1024 * 1024; // 5MB for survey, 10MB for others
+      const maxSizeLabel = isSurvey ? "5MB" : "10MB";
 
       if (file.size > maxSize) {
-        alert("Ukuran file terlalu besar! Maksimal 10MB.");
+        alert("Ukuran file terlalu besar! Maksimal " + maxSizeLabel + ".");
         input.value = "";
         return;
       }

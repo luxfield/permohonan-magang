@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\UploadedFile;
+
 use function Pest\Laravel\post;
 
 it('validates suratMandiri size is not larger than 10MB', function () {
@@ -74,4 +75,25 @@ it('validates institusi file uploads sizes are not larger than 10MB', function (
         'suratPengantar' => 'Ukuran file Surat Pengantar maksimal 10MB.',
         'proposal' => 'Ukuran file Proposal maksimal 10MB.',
     ]);
+});
+
+it('validates buktiSurvey size is not larger than 5MB', function () {
+    $file = UploadedFile::fake()->create('survey.png', 5121); // 5121 KB = >5MB
+
+    $response = post(route('sample.register.store'), [
+        'statusPengajuan' => 'mandiri',
+        'nama' => 'Test Name',
+        'kontakHp' => '081234567890',
+        'email' => 'test@example.com',
+        'nik' => '1234567890123456',
+        'tglLahir' => '2000-01-01',
+        'alamat' => 'Test Address',
+        'tglMulai' => now()->addDay()->toDateString(),
+        'tglSelesai' => now()->addMonths(2)->toDateString(),
+        'tujuan' => 'Test Tujuan',
+        'pernyataan' => 'on',
+        'buktiSurvey' => $file,
+    ]);
+
+    $response->assertSessionHasErrors(['buktiSurvey' => 'Ukuran file bukti survey maksimal 5MB.']);
 });

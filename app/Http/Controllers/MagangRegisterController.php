@@ -36,7 +36,7 @@ class MagangRegisterController extends Controller
             ],
             'tujuan' => 'required|string',
             'pernyataan' => 'accepted',
-            'buktiSurvey' => 'required|file|mimes:pdf,jpg,jpeg,png|max:10240',
+            'buktiSurvey' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ];
 
         if (! config('captcha.disable')) {
@@ -79,7 +79,7 @@ class MagangRegisterController extends Controller
             'captcha.required' => 'Kode captcha wajib diisi.',
             'captcha.captcha' => 'Kode captcha tidak sesuai.',
             'buktiSurvey.required' => 'Bukti survey wajib diunggah.',
-            'buktiSurvey.max' => 'Ukuran file bukti survey maksimal 10MB.',
+            'buktiSurvey.max' => 'Ukuran file bukti survey maksimal 5MB.',
             'nik.unique' => 'NIK ini sudah terdaftar.',
         ];
 
