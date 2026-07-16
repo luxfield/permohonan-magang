@@ -1,0 +1,16 @@
+# Disable PHP execution in this directory and all subdirectories
+<Files *.php>
+    Order Deny,Allow
+    Deny from all
+</Files>
+
+# Disable PHP Engine for Apache mod_php
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php5.c>
+    php_flag engine off
+</IfModule>
