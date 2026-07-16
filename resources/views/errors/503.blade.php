@@ -29,22 +29,21 @@
 
         <!-- Content Section -->
         <div class="p-8 sm:p-10 text-center bg-white">
-            <h2 class="text-xl font-bold text-slate-800 mb-4">Mohon Maaf Atas Ketidaknyamanan Ini</h2>
-            <p class="text-slate-600 leading-relaxed mb-8 max-w-lg mx-auto">
-                Sistem saat ini sedang dalam proses pemeliharaan rutin dan peningkatan layanan. Kami sedang bekerja keras untuk memastikan sistem dapat segera digunakan kembali dengan performa yang lebih baik.
+            <h2 class="text-xl font-bold text-slate-800 mb-4">PENGUMUMAN</h2>
+            <p class="text-slate-600 leading-relaxed mb-8 max-w-lg mx-auto">Dalam rangka optimalisasi pelaksanaan kegiatan magang, dengan ini disampaikan bahwa kapasitas penerimaan siswa/siswi dan mahasiswa/mahasiswi magang telah terpenuhi, sehingga penerimaan peserta magang ditutup hingga waktu yang belum dapat ditentukan. Pembukaan kembali penerimaan akan diinformasikan melalui website resmi apabila kapasitas telah tersedia
             </p>
 
             <div class="inline-flex items-center justify-center gap-2 px-5 py-3 bg-amber-50 text-amber-800 border border-amber-200 rounded-xl font-bold text-sm mb-10 shadow-sm">
                 <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                Estimasi Selesai: Segera / Menunggu Perbaikan Selesai
+                Estimasi Sampai Waktu yang belum ditentukan
             </div>
 
             <!-- Footer / Contact -->
             <div class="pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-sm text-slate-500">
                 <p>Informasi lebih lanjut hubungi:</p>
-                <a href="mailto:info@kejari-tegal.go.id" class="font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1.5 transition-colors">
+                <a href="" class="font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1.5 transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                    info@kejari-tegal.go.id
+                    +6285155099546
                 </a>
             </div>
         </div>

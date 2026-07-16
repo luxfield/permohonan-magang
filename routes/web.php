@@ -44,3 +44,37 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 });
 
 Route::get('/status/{id}/upload', [MagangStatusController::class, 'uploadForm'])->name('status.upload.form');
+
+Route::get('/artisan-clear-xyz123', function () {
+    \Artisan::call('config:clear');
+    \Artisan::call('cache:clear');
+    \Artisan::call('view:clear');
+    \Artisan::call('route:clear');
+    
+    return 'Cache cleared: ' . \Artisan::output();
+});
+
+use Illuminate\Support\Facades\Artisan;
+
+Route::get('/maintenance-on/{secret}', function ($secret) {
+    if ($secret !== 'maintenis') {
+        abort(404);
+    }
+
+    Artisan::call('down', [
+        '--secret' => 'maintenis',
+        '--retry' => 60,
+    ]);
+
+    return 'Maintenance mode: ON';
+});
+
+Route::get('/maintenance-off/{secret}', function ($secret) {
+    if ($secret !== 'maintenis') {
+        abort(404);
+    }
+
+    Artisan::call('up');
+
+    return 'Maintenance mode: OFF';
+});
