@@ -36,6 +36,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/preview-file', [AdminController::class, 'previewFile'])->name('file.preview');
     Route::get('/{id}', [AdminController::class, 'show'])->name('show');
     Route::put('/{id}/status', [AdminController::class, 'updateStatus'])->name('update_status');
+    Route::put('/{id}/details', [AdminController::class, 'updateApplicationDetails'])->name('update_details');
     Route::post('/{id}/interns', [AdminController::class, 'addIntern'])->name('interns.add');
     Route::put('/interns/{id}', [AdminController::class, 'updateIntern'])->name('interns.update');
     Route::delete('/interns/{id}', [AdminController::class, 'deleteIntern'])->name('interns.destroy');

@@ -24,6 +24,22 @@
 
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     
+    @if(session('success') && !\Illuminate\Support\Str::contains(session('success'), 'Akun untuk'))
+      <div class="mb-6 bg-emerald-100 border border-emerald-400 text-emerald-700 px-4 py-3 rounded-xl shadow-sm">
+        {{ session('success') }}
+      </div>
+    @endif
+
+    @if($errors->any())
+      <div class="mb-6 bg-rose-100 border border-rose-400 text-rose-700 px-4 py-3 rounded-xl shadow-sm">
+        <ul class="list-disc list-inside text-sm">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+      </div>
+    @endif
+    
     <!-- Header Section -->
     <div class="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-8">
       <div>
@@ -60,6 +76,10 @@
       </div>
       
       <div class="flex gap-3">
+        <button type="button" onclick="openEditDetailsModal()" class="bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100 px-4 py-2 rounded-xl font-bold text-sm transition flex items-center gap-2 cursor-pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+            Edit Data Utama
+        </button>
         <form action="{{ route('admin.destroy', $application->id) }}" method="POST" onsubmit="return confirm('Hapus data ini secara permanen?');">
             @csrf @method('DELETE')
             <button type="submit" class="bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100 px-4 py-2 rounded-xl font-bold text-sm transition flex items-center gap-2">
@@ -481,6 +501,117 @@
 
   </main>
 
+  <!-- Modal Edit Details -->
+  <div id="edit-details-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300 opacity-0">
+    <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full overflow-hidden transform scale-95 transition-all duration-300 opacity-0" id="edit-details-modal-content">
+      <div class="px-6 py-4 bg-emerald-900 text-white flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+          <h2 class="font-bold text-lg">Edit Data Utama Pemohon</h2>
+        </div>
+        <button onclick="closeEditDetailsModal()" class="text-white/80 hover:text-white transition cursor-pointer">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <form action="{{ route('admin.update_details', $application->id) }}" method="POST" class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+        @csrf
+        @method('PUT')
+
+        @if($application->status_pengajuan === 'mandiri')
+          <!-- Mandiri Fields -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nama Lengkap</label>
+              <input type="text" name="nama" value="{{ old('nama', $application->nama) }}" required class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">NIK</label>
+              <input type="text" name="nik" value="{{ old('nik', $application->nik) }}" required class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Email</label>
+              <input type="email" name="email" value="{{ old('email', $application->email) }}" required class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">No. HP / WhatsApp</label>
+              <input type="text" name="no_hp" value="{{ old('no_hp', $application->no_hp) }}" required class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Tanggal Lahir</label>
+              <input type="date" name="tgl_lahir" value="{{ old('tgl_lahir', $application->tgl_lahir ? $application->tgl_lahir->format('Y-m-d') : '') }}" required class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Asal Institusi</label>
+              <input type="text" name="pendidikan_asal" value="{{ old('pendidikan_asal', $application->pendidikan_asal) }}" class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Program Studi</label>
+              <input type="text" name="prodi" value="{{ old('prodi', $application->prodi) }}" class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500">
+            </div>
+          </div>
+        @else
+          <!-- Institusi / Kejuruan Fields -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nama Institusi / Sekolah</label>
+              <input type="text" name="institusi" value="{{ old('institusi', $application->institusi) }}" required class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Fakultas / Jurusan</label>
+              <input type="text" name="fakultas" value="{{ old('fakultas', $application->fakultas) }}" required class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Semester / Tingkat</label>
+              <input type="text" name="semester" value="{{ old('semester', $application->semester) }}" required class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Jumlah Peserta</label>
+              <input type="number" name="jumlah_peserta" value="{{ old('jumlah_peserta', $application->jumlah_peserta) }}" required class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nama Pembimbing</label>
+              <input type="text" name="pembimbing" value="{{ old('pembimbing', $application->pembimbing) }}" required class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Kontak Pembimbing</label>
+              <input type="text" name="kontak_pembimbing" value="{{ old('kontak_pembimbing', $application->kontak_pembimbing) }}" required class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Email Utama Kontak</label>
+              <input type="email" name="email" value="{{ old('email', $application->email) }}" required class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">No. HP / WhatsApp Utama</label>
+              <input type="text" name="no_hp" value="{{ old('no_hp', $application->no_hp) }}" required class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500">
+            </div>
+          </div>
+        @endif
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Alamat Lengkap</label>
+          <textarea name="alamat" rows="2" required class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500">{{ old('alamat', $application->alamat) }}</textarea>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Tanggal Mulai Magang</label>
+            <input type="date" name="tgl_mulai" value="{{ old('tgl_mulai', $application->tgl_mulai ? $application->tgl_mulai->format('Y-m-d') : '') }}" required class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Tanggal Selesai Magang</label>
+            <input type="date" name="tgl_selesai" value="{{ old('tgl_selesai', $application->tgl_selesai ? $application->tgl_selesai->format('Y-m-d') : '') }}" required class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500">
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
+          <button type="button" onclick="closeEditDetailsModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold rounded-xl transition cursor-pointer">Batal</button>
+          <button type="submit" class="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-bold rounded-xl shadow-sm transition cursor-pointer">Simpan Perubahan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Script untuk toggle form edit -->
   <script>
     function toggleEdit(id) {
@@ -491,6 +622,37 @@
             el.classList.add('hidden');
         }
     }
+
+    const editModal = document.getElementById('edit-details-modal');
+    const editContent = document.getElementById('edit-details-modal-content');
+
+    function openEditDetailsModal() {
+      editModal.classList.remove('hidden');
+      editModal.classList.add('flex');
+      editModal.offsetHeight; // Force reflow
+      editModal.classList.remove('opacity-0');
+      editModal.classList.add('opacity-100');
+      editContent.classList.remove('scale-95', 'opacity-0');
+      editContent.classList.add('scale-100', 'opacity-100');
+    }
+
+    function closeEditDetailsModal() {
+      editModal.classList.remove('opacity-100');
+      editModal.classList.add('opacity-0');
+      editContent.classList.remove('scale-100', 'opacity-100');
+      editContent.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => {
+        editModal.classList.remove('flex');
+        editModal.classList.add('hidden');
+      }, 300);
+    }
+
+    // Close on clicking backdrop
+    editModal.addEventListener('click', function (e) {
+      if (e.target === editModal) {
+        closeEditDetailsModal();
+      }
+    });
   </script>
 </body>
 </html>

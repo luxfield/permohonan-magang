@@ -213,6 +213,54 @@ class AdminController extends Controller
         return back()->with('success', 'Laporan kinerja berhasil dihapus.');
     }
 
+    public function updateApplicationDetails(Request $request, $id)
+    {
+        $application = MagangApplication::findOrFail($id);
+
+        $rules = [
+            'no_hp' => 'required|string|min:10|max:15|regex:/^([0-9\s\-\+\(\)]*)$/',
+            'email' => 'required|email|max:255',
+            'alamat' => 'required|string',
+            'tgl_mulai' => 'required|date',
+            'tgl_selesai' => 'required|date|after_or_equal:tgl_mulai',
+        ];
+
+        if ($application->status_pengajuan === 'mandiri') {
+            $rules = array_merge($rules, [
+                'nama' => 'required|string|max:255',
+                'nik' => 'required|numeric',
+                'tgl_lahir' => 'required|date',
+                'pendidikan_asal' => 'nullable|string|max:255',
+                'prodi' => 'nullable|string|max:255',
+            ]);
+        } else {
+            $rules = array_merge($rules, [
+                'institusi' => 'required|string|max:255',
+                'fakultas' => 'required|string|max:255',
+                'semester' => 'required|string|max:50',
+                'pembimbing' => 'required|string|max:255',
+                'kontak_pembimbing' => 'required|string|max:255',
+                'jumlah_peserta' => 'required|integer',
+            ]);
+        }
+
+        $messages = [
+            'no_hp.required' => 'Nomor HP wajib diisi.',
+            'no_hp.min' => 'Nomor HP minimal 10 karakter.',
+            'no_hp.max' => 'Nomor HP maksimal 15 karakter.',
+            'no_hp.regex' => 'Format nomor HP tidak valid.',
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'tgl_selesai.after_or_equal' => 'Tanggal selesai harus setelah atau sama dengan tanggal mulai.',
+        ];
+
+        $validated = $request->validate($rules, $messages);
+
+        $application->update($validated);
+
+        return redirect()->route('admin.show', $id)->with('success', 'Data utama pemohon berhasil diperbarui.');
+    }
+
     public function previewFile(Request $request)
     {
         $path = $request->query('path');

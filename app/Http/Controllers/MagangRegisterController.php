@@ -28,7 +28,7 @@ class MagangRegisterController extends Controller
         $rules = [
             'statusPengajuan' => 'required|in:mandiri,institusi,kejuruan',
             'nama' => 'required|string|max:255',
-            'kontakHp' => 'required|string|max:20',
+            'kontakHp' => 'required|string|min:10|max:15|regex:/^([0-9\s\-\+\(\)]*)$/',
             'email' => 'required|email|max:255',
             'nik' => [
                 'required',
@@ -93,6 +93,12 @@ class MagangRegisterController extends Controller
 
         // 3. Jalankan Validasi
         $messages = [
+            'kontakHp.required' => 'Nomor HP/WhatsApp wajib diisi.',
+            'kontakHp.min' => 'Nomor HP/WhatsApp minimal 10 karakter.',
+            'kontakHp.max' => 'Nomor HP/WhatsApp maksimal 15 karakter.',
+            'kontakHp.regex' => 'Format nomor HP/WhatsApp tidak valid.',
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
             'suratMandiri.max' => 'Ukuran file Surat Permohonan maksimal 5MB.',
             'ktpMandiri.max' => 'Ukuran file KTP maksimal 5MB.',
             'fotoMandiri.max' => 'Ukuran file Pas Foto maksimal 5MB.',
