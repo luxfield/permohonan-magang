@@ -39,7 +39,7 @@
             </a>
         @else
             <!-- Card 1: Pengumuman Ditutup -->
-            <div class="group bg-white rounded-2xl shadow-xl border border-slate-200 p-8 hover:border-amber-500 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col items-center text-center">
+            <a href="javascript:void(0)" class="group bg-white rounded-2xl shadow-xl border border-slate-200 p-8 hover:border-amber-500 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col items-center text-center cursor-pointer">
                 <div class="w-20 h-20 mx-auto bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mb-6 group-hover:bg-amber-600 group-hover:text-white transition-colors">
                     <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
@@ -49,7 +49,7 @@
                 <p class="text-slate-600 leading-relaxed text-sm max-w-lg mx-auto">
                     {{ \App\Models\Setting::getByKey('registration_closed_message', 'Dalam rangka optimalisasi pelaksanaan kegiatan magang, dengan ini disampaikan bahwa kapasitas penerimaan siswa/siswi dan mahasiswa/mahasiswi magang telah terpenuhi, sehingga penerimaan peserta magang ditutup hingga waktu yang belum dapat ditentukan. Pembukaan kembali penerimaan akan diinformasikan melalui website resmi apabila kapasitas telah tersedia.') }}
                 </p>
-            </div>
+            </a>
         @endif
 
         <!-- Card 2: Cek Status -->
