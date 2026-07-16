@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Intern;
 use App\Models\MagangApplication;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,19 +16,35 @@ class AdminController extends Controller
     {
         // Ambil data terbaru, 10 per halaman
         $applications = MagangApplication::latest()->paginate(10);
-        return view('admin.dashboard', compact('applications'));
+        $registrationOpen = \App\Models\Setting::getByKey('registration_status', 'open') === 'open';
+        $registrationClosedMessage = \App\Models\Setting::getByKey('registration_closed_message', '');
+
+        return view('admin.dashboard', compact('applications', 'registrationOpen', 'registrationClosedMessage'));
+    }
+
+    public function updateSettings(Request $request)
+    {
+        $request->validate([
+            'registration_status' => 'required|in:open,closed',
+            'registration_closed_message' => 'required_if:registration_status,closed|nullable|string',
+        ]);
+
+        \App\Models\Setting::setByKey('registration_status', $request->registration_status);
+        \App\Models\Setting::setByKey('registration_closed_message', $request->registration_closed_message);
+
+        return redirect()->route('admin.dashboard')->with('success', 'Pengaturan pendaftaran berhasil diperbarui.');
     }
 
     public function show(Request $request, $id)
     {
         $application = MagangApplication::with('interns.user')->findOrFail($id);
-        
+
         $query = \App\Models\MagangKinerja::where('magang_application_id', $id);
         if ($request->has('intern_id') && $request->intern_id != '') {
             $query->where('intern_id', $request->intern_id);
         }
         $kinerjas = $query->latest()->get();
-        
+
         return view('admin.show', compact('application', 'kinerjas'));
     }
 
@@ -58,7 +74,7 @@ class AdminController extends Controller
             'nama' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email',
             'nim' => 'nullable|string|max:255',
-            'tgl_lahir' => 'required|date'
+            'tgl_lahir' => 'required|date',
         ]);
 
         // 2. Cek kuota peserta
@@ -102,9 +118,9 @@ class AdminController extends Controller
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
             // Abaikan validasi unique untuk email milik user itu sendiri
-            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'email' => 'required|email|max:255|unique:users,email,'.$user->id,
             'nim' => 'nullable|string|max:255',
-            'tgl_lahir' => 'required|date'
+            'tgl_lahir' => 'required|date',
         ]);
 
         DB::transaction(function () use ($intern, $user, $validated) {
@@ -168,7 +184,7 @@ class AdminController extends Controller
     public function updateKinerja(Request $request, $id)
     {
         $kinerja = \App\Models\MagangKinerja::findOrFail($id);
-        
+
         $request->validate([
             'judul' => 'required|string|max:255',
             'deskripsi' => 'required|string',
@@ -187,7 +203,7 @@ class AdminController extends Controller
     public function deleteKinerja($id)
     {
         $kinerja = \App\Models\MagangKinerja::findOrFail($id);
-        
+
         if ($kinerja->file_path && Storage::disk('public')->exists($kinerja->file_path)) {
             Storage::disk('public')->delete($kinerja->file_path);
         }
@@ -201,19 +217,19 @@ class AdminController extends Controller
     {
         $path = $request->query('path');
 
-        if (!$path || !Storage::disk('public')->exists($path)) {
+        if (! $path || ! Storage::disk('public')->exists($path)) {
             abort(404);
         }
 
         $fullPath = Storage::disk('public')->path($path);
-        
+
         // Paksa mime type menjadi application/pdf agar browser mau menampilkan preview
         $extension = pathinfo($fullPath, PATHINFO_EXTENSION);
         $mimeType = strtolower($extension) === 'pdf' ? 'application/pdf' : Storage::disk('public')->mimeType($path);
 
         return response()->file($fullPath, [
             'Content-Type' => $mimeType,
-            'Content-Disposition' => 'inline; filename="' . basename($path) . '"'
+            'Content-Disposition' => 'inline; filename="'.basename($path).'"',
         ]);
     }
 }

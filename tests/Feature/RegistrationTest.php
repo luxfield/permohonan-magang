@@ -13,6 +13,25 @@ test('registration page can be rendered', function () {
     get(route('sample.register.index'))->assertStatus(200);
 });
 
+test('registration page is blocked when registration is closed', function () {
+    \App\Models\Setting::setByKey('registration_status', 'closed');
+
+    get(route('sample.register.index'))
+        ->assertRedirect(route('home'))
+        ->assertSessionHas('error', 'Pendaftaran magang saat ini sedang ditutup.');
+});
+
+test('submitting registration fails when registration is closed', function () {
+    \App\Models\Setting::setByKey('registration_status', 'closed');
+
+    post(route('sample.register.store'), [
+        'statusPengajuan' => 'mandiri',
+        'nama' => 'Budi Santoso',
+    ])
+        ->assertRedirect(route('home'))
+        ->assertSessionHas('error', 'Pendaftaran magang saat ini sedang ditutup.');
+});
+
 /**
  * Test Validasi Dasar
  */

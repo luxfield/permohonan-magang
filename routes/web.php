@@ -32,6 +32,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Group route untuk admin yang membutuhkan login
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+    Route::put('/settings', [AdminController::class, 'updateSettings'])->name('settings.update');
     Route::get('/preview-file', [AdminController::class, 'previewFile'])->name('file.preview');
     Route::get('/{id}', [AdminController::class, 'show'])->name('show');
     Route::put('/{id}/status', [AdminController::class, 'updateStatus'])->name('update_status');
@@ -50,8 +51,8 @@ Route::get('/artisan-clear-xyz123', function () {
     \Artisan::call('cache:clear');
     \Artisan::call('view:clear');
     \Artisan::call('route:clear');
-    
-    return 'Cache cleared: ' . \Artisan::output();
+
+    return 'Cache cleared: '.\Artisan::output();
 });
 
 use Illuminate\Support\Facades\Artisan;

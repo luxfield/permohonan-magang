@@ -11,11 +11,19 @@ class MagangRegisterController extends Controller
 {
     public function index()
     {
+        if (\App\Models\Setting::getByKey('registration_status', 'open') !== 'open') {
+            return redirect()->route('home')->with('error', 'Pendaftaran magang saat ini sedang ditutup.');
+        }
+
         return view('sample-register');
     }
 
     public function store(Request $request): RedirectResponse
     {
+        if (\App\Models\Setting::getByKey('registration_status', 'open') !== 'open') {
+            return redirect()->route('home')->with('error', 'Pendaftaran magang saat ini sedang ditutup.');
+        }
+
         // 1. Aturan Validasi Dasar (Berlaku untuk semua)
         $rules = [
             'statusPengajuan' => 'required|in:mandiri,institusi,kejuruan',

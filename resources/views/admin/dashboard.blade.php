@@ -45,6 +45,74 @@
       </div>
     @endif
 
+    <!-- Settings Panel -->
+    <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 mb-6">
+      <div class="flex items-center gap-2.5 mb-4 pb-3 border-b border-slate-100">
+        <svg class="w-5 h-5 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+        </svg>
+        <h2 class="font-bold text-slate-800">Pengaturan Registrasi Magang</h2>
+      </div>
+
+      <form action="{{ route('admin.settings.update') }}" method="POST" class="space-y-4">
+        @csrf
+        @method('PUT')
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Status Pendaftaran</label>
+            <div class="flex items-center gap-4 mt-2">
+              <label class="inline-flex items-center cursor-pointer">
+                <input type="radio" name="registration_status" value="open" class="sr-only peer" {{ $registrationOpen ? 'checked' : '' }} onchange="toggleMessageField()">
+                <div class="px-4 py-2 border border-slate-200 rounded-xl text-sm font-semibold text-slate-600 bg-white peer-checked:bg-emerald-50 peer-checked:text-emerald-700 peer-checked:border-emerald-500 transition shadow-sm">
+                  Dibuka (Open)
+                </div>
+              </label>
+              <label class="inline-flex items-center cursor-pointer">
+                <input type="radio" name="registration_status" value="closed" class="sr-only peer" {{ !$registrationOpen ? 'checked' : '' }} onchange="toggleMessageField()">
+                <div class="px-4 py-2 border border-slate-200 rounded-xl text-sm font-semibold text-slate-600 bg-white peer-checked:bg-amber-50 peer-checked:text-amber-700 peer-checked:border-amber-500 transition shadow-sm">
+                  Ditutup (Closed)
+                </div>
+              </label>
+            </div>
+            <p class="text-[11px] text-slate-500 mt-2">Menentukan apakah form registrasi magang dapat diakses publik.</p>
+          </div>
+
+          <div class="md:col-span-2" id="closed-message-container">
+            <label for="registration_closed_message" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Pesan Pengumuman Penutupan</label>
+            <textarea id="registration_closed_message" name="registration_closed_message" rows="3" 
+                      class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500 disabled:bg-slate-50 disabled:text-slate-400 transition"
+                      placeholder="Masukkan alasan atau detail pengumuman penutupan pendaftaran...">{{ $registrationClosedMessage }}</textarea>
+            <p class="text-[11px] text-slate-500 mt-1">Pesan ini akan tampil di homepage saat pendaftaran ditutup.</p>
+          </div>
+        </div>
+
+        <div class="flex justify-end pt-3 border-t border-slate-100">
+          <button type="submit" class="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-bold rounded-xl shadow-sm transition cursor-pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+            Simpan Pengaturan
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      function toggleMessageField() {
+        const isOpen = document.querySelector('input[name="registration_status"]:checked').value === 'open';
+        const messageTextarea = document.getElementById('registration_closed_message');
+        const container = document.getElementById('closed-message-container');
+        if (isOpen) {
+          messageTextarea.disabled = true;
+          container.classList.add('opacity-50');
+        } else {
+          messageTextarea.disabled = false;
+          container.classList.remove('opacity-50');
+        }
+      }
+      document.addEventListener('DOMContentLoaded', toggleMessageField);
+    </script>
+
     <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
       <div class="overflow-x-auto">
         <table class="w-full text-sm text-left">
