@@ -104,10 +104,10 @@
         const container = document.getElementById('closed-message-container');
         if (isOpen) {
           messageTextarea.disabled = true;
-          container.classList.add('opacity-50');
+          container.classList.add('hidden');
         } else {
           messageTextarea.disabled = false;
-          container.classList.remove('opacity-50');
+          container.classList.remove('hidden');
         }
       }
       document.addEventListener('DOMContentLoaded', toggleMessageField);
