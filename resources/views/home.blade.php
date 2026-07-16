@@ -47,7 +47,7 @@
                 </div>
                 <h2 class="text-xl font-bold text-slate-800 mb-4 text-amber-800">PENGUMUMAN</h2>
                 <p class="text-slate-600 leading-relaxed text-sm max-w-lg mx-auto">
-                    {{ \App\Models\Setting::getByKey('registration_closed_message') }}
+                    {{ \App\Models\Setting::getByKey('registration_closed_message', 'Dalam rangka optimalisasi pelaksanaan kegiatan magang, dengan ini disampaikan bahwa kapasitas penerimaan siswa/siswi dan mahasiswa/mahasiswi magang telah terpenuhi, sehingga penerimaan peserta magang ditutup hingga waktu yang belum dapat ditentukan. Pembukaan kembali penerimaan akan diinformasikan melalui website resmi apabila kapasitas telah tersedia.') }}
                 </p>
             </div>
         @endif

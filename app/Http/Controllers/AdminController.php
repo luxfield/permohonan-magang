@@ -17,7 +17,7 @@ class AdminController extends Controller
         // Ambil data terbaru, 10 per halaman
         $applications = MagangApplication::latest()->paginate(10);
         $registrationOpen = \App\Models\Setting::getByKey('registration_status', 'open') === 'open';
-        $registrationClosedMessage = \App\Models\Setting::getByKey('registration_closed_message', '');
+        $registrationClosedMessage = \App\Models\Setting::getByKey('registration_closed_message', 'Dalam rangka optimalisasi pelaksanaan kegiatan magang, dengan ini disampaikan bahwa kapasitas penerimaan siswa/siswi dan mahasiswa/mahasiswi magang telah terpenuhi, sehingga penerimaan peserta magang ditutup hingga waktu yang belum dapat ditentukan. Pembukaan kembali penerimaan akan diinformasikan melalui website resmi apabila kapasitas telah tersedia.');
 
         return view('admin.dashboard', compact('applications', 'registrationOpen', 'registrationClosedMessage'));
     }
